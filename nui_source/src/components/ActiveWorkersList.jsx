@@ -15,7 +15,7 @@ function ActiveWorkersList({ workers, getInitial }) {
   return (
     <div>
       <div className="flex justify-between items-center mb-2">
-        <h2 className="text-lg font-semibold">Active Personnel ({filteredWorkers.length})</h2>
+        <h2 className="text-lg font-semibold">Aktiv Personal ({filteredWorkers.length})</h2>
         <div className="relative">
           <select 
             className="bg-gray-600 text-white text-sm rounded px-2 py-1 appearance-none cursor-pointer pr-6"
@@ -35,13 +35,19 @@ function ActiveWorkersList({ workers, getInitial }) {
       </div>
       
       <div className="bg-gray-700 rounded-lg divide-y divide-gray-600">
-        {filteredWorkers.map(worker => (
-          <WorkerCard 
-            key={worker.id} 
-            worker={worker} 
-            getInitial={getInitial}
-          />
-        ))}
+        {filteredWorkers.length > 0 ? (
+          filteredWorkers.map(worker => (
+            <WorkerCard 
+              key={worker.id} 
+              worker={worker} 
+              getInitial={getInitial}
+            />
+          ))
+        ) : (
+          <div className="p-3 text-center text-gray-400">
+            Ingen personal är i tjänst för detta filter
+          </div>
+        )}
       </div>
     </div>
   );

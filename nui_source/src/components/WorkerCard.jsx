@@ -28,7 +28,7 @@ function WorkerCard({ worker, getInitial }) {
         <div className="flex space-x-2 text-sm text-gray-400">
           <span>{worker.job}</span>
           <span>•</span>
-          <span>{worker.rank}</span>
+          <span>{worker.grade}</span>
           <span>•</span>
           <span>{worker.dutyTime}</span>
         </div>

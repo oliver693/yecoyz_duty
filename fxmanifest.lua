@@ -12,6 +12,7 @@ client_scripts {
 }
 
 server_scripts {
+    "server/framework/sv_framwork.lua",
     "server/sv_funcs.lua",
     "server/sv_main.lua",
 }

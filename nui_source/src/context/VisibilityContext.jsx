@@ -8,19 +8,43 @@ export const useVisibility = () => useContext(VisibilityContext);
 
 // Provider-komponent
 export const VisibilityProvider = ({ children }) => {
-  const [isVisible, setIsVisible] = useState(true); // Börjar som false
+  const [isVisible, setIsVisible] = useState(false); // Börjar som false
+  const [dutyData, setDutyData] = useState({
+    name: '',
+    job: '',
+    rank: '',
+    isOnDuty: false,
+    dutyStarted: null,
+    activeWorkers: [],
+    dutyHistory: []
+  });
 
   const toggleVisibility = () => {
     setIsVisible((prev) => !prev); // Växlar mellan true/false
   };
 
-
   useEffect(() => {
     const handleMessage = (event) => {
-      if (event.data) {
-        if (event.data.action === "showUI") {
+      const data = event.data;
+      console.log("VisibilityContext received data:", JSON.stringify(data));
+      
+      if (data) {
+        if (data.action === "showUI") {
           setIsVisible(true);
-        } else if (event.data.action === "hideUI") {
+          
+          // Om dutyData skickades med, uppdatera state
+          if (data.type === "dutyData") {
+            setDutyData({
+              name: data.name || '',
+              job: data.job || '',
+              rank: data.rank || '',
+              isOnDuty: data.isOnDuty || false,
+              dutyStarted: data.dutyStarted || null,
+              activeWorkers: data.activeWorkers || [],
+              dutyHistory: data.dutyHistory || []
+            });
+          }
+        } else if (data.action === "hideUI") {
           setIsVisible(false);
         }
       }
@@ -34,7 +58,9 @@ export const VisibilityProvider = ({ children }) => {
     <VisibilityContext.Provider
       value={{ 
         isVisible, 
-        toggleVisibility, 
+        toggleVisibility,
+        dutyData,
+        setDutyData
       }}
     >
       {children}

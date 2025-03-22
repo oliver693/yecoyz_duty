@@ -26,7 +26,7 @@ function YourStatusCard({ isOnDuty, dutyTime, yourJob, yourRank, userName, getIn
         </div>
       </div>
       <div className="mb-3">
-        <p className="text-gray-400 text-sm">Duty Time</p>
+        <p className="text-gray-400 text-sm">Tjänstetid</p>
         <p className="font-medium text-lg">{dutyTime}</p>
       </div>
       <button
@@ -37,7 +37,7 @@ function YourStatusCard({ isOnDuty, dutyTime, yourJob, yourRank, userName, getIn
             : 'bg-green-600 hover:bg-green-700'
         }`}
       >
-        {isOnDuty ? 'Go Off Duty' : 'Go On Duty'}
+        {isOnDuty ? 'Gå ur tjänst' : 'Gå i tjänst'}
       </button>
     </div>
   );

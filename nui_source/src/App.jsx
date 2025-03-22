@@ -4,16 +4,15 @@ import DutyContainer from "./components/DutyContainer"
 import './App.css'
 
 const ShowDuty = () => {
-  const isVisible = useVisibility();
+  const { isVisible } = useVisibility();
   return (
     <>
-    {isVisible && <DutyContainer />}
+      {isVisible && <DutyContainer />}
     </>
   )
 }
 
 function App() {
-
   return (
     <VisibilityProvider>
       <ShowDuty />

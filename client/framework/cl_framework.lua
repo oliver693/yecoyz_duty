@@ -8,6 +8,32 @@ elseif (GetResourceState("qb-core") == "started") then
     print("[INFO] - QBCore Framework")
 end
 
+function PlayerLoaded()
+    if (Framework == "ESX") then
+        return ESX.IsPlayerLoaded()
+    elseif (Framework == "QBCore") then
+        
+    end
+    return nil
+end
+
+function GetPlayerJobGradeName()
+    if (Framework == "ESX") then
+        return ESX.PlayerData.job.grade_label
+    elseif (Framework == "QBCore") then
+    end
+    return nil
+end
+
+function GetPlayerName()
+    if (Framework == "ESX") then
+        return ESX.PlayerData.firstName .. ESX.PlayerData.lastName
+    elseif (Framework == "QBCore") then
+
+    end
+    return nil
+end
+
 function GetPlayerJobLabel()
     if (Framework == "ESX") then
         return ESX.PlayerData.job.label
