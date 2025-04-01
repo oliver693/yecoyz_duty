@@ -8,28 +8,20 @@ elseif (GetResourceState("qb-core") == "started") then
     print("[INFO] - QBCore Framework")
 end
 
-function PlayerLoaded()
-    if (Framework == "ESX") then
-        return ESX.IsPlayerLoaded()
-    elseif (Framework == "QBCore") then
-        
-    end
-    return nil
-end
-
 function GetPlayerJobGradeName()
     if (Framework == "ESX") then
         return ESX.PlayerData.job.grade_label
     elseif (Framework == "QBCore") then
+        return QBCore.Functions.GetPlayerData().job.grade.label
     end
     return nil
 end
 
 function GetPlayerName()
     if (Framework == "ESX") then
-        return ESX.PlayerData.firstName .. ESX.PlayerData.lastName
+        return ESX.PlayerData.firstName .. " " .. ESX.PlayerData.lastName
     elseif (Framework == "QBCore") then
-
+        return QBCore.Functions.GetPlayerData().charinfo.firstname .. " " .. QBCore.Functions.GetPlayerData().charinfo.lastname
     end
     return nil
 end
@@ -38,7 +30,7 @@ function GetPlayerJobLabel()
     if (Framework == "ESX") then
         return ESX.PlayerData.job.label
     elseif (Framework == "QBCore") then
-
+        return QBCore.Functions.GetPlayerData().job.label
     end
     return nil
 end
@@ -47,7 +39,7 @@ function GetPlayerJobName()
     if (Framework == "ESX") then
         return ESX.PlayerData.job.name
     elseif (Framework == "QBCore") then
-
+        return QBCore.Functions.GetPlayerData().job.name
     end
     return nil
 end
@@ -56,17 +48,54 @@ function GetPlayerOnDuty()
     if (Framework == "ESX") then
         return ESX.PlayerData.job.onDuty
     elseif (Framework == "QBCore") then
-
+        print("onDuty QBCORE?", QBCore.Functions.GetPlayerData().job.onduty)
+        return QBCore.Functions.GetPlayerData().job.onduty
     end
     return nil
 end
 
-function SetDuty(Status)
+function SetDuty(status)
     if (Framework == "ESX") then
-        ESX.PlayerData.job.onDuty = Status
+        ESX.PlayerData.job.onDuty = status
         return ESX.PlayerData.job.onDuty
     elseif (Framework == "QBCore") then
-
+        local setDuty = lib.callback.await("yecoyz_duty:setDuty", false, status)
+        if (not setDuty) then return false end
+        return setDuty
     end
     return nil
+end
+
+if (Framework == "ESX") then
+    RegisterNetEvent('esx:playerLoaded', function()
+        Duty = GetPlayerOnDuty()
+        if (Duty) then
+            local startDutyTime = lib.callback.await("yecoyz_duty:startDuty", false)
+        end
+    end)
+
+    AddEventHandler("playerDropped", function()
+        local onDuty = GetPlayerOnDuty()
+
+        if (onDuty) then
+            local endDuty = lib.callback.await("yecoyz_duty:endDuty")
+            SetDuty(false)
+        end
+    end)
+elseif (Framework == "QBCore") then
+    RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
+        Duty = GetPlayerOnDuty()
+        if (Duty) then
+            local startDutyTime = lib.callback.await("yecoyz_duty:startDuty", false)
+        end
+    end)
+
+    AddEventHandler("playerDropped", function()
+        local onDuty = GetPlayerOnDuty()
+
+        if (onDuty) then
+            local endDuty = lib.callback.await("yecoyz_duty:endDuty")
+            SetDuty(false)
+        end
+    end)
 end

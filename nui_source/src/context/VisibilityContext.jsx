@@ -26,13 +26,11 @@ export const VisibilityProvider = ({ children }) => {
   useEffect(() => {
     const handleMessage = (event) => {
       const data = event.data;
-      console.log("VisibilityContext received data:", JSON.stringify(data));
       
       if (data) {
         if (data.action === "showUI") {
           setIsVisible(true);
           
-          // Om dutyData skickades med, uppdatera state
           if (data.type === "dutyData") {
             setDutyData({
               name: data.name || '',
@@ -41,7 +39,10 @@ export const VisibilityProvider = ({ children }) => {
               isOnDuty: data.isOnDuty || false,
               dutyStarted: data.dutyStarted || null,
               activeWorkers: data.activeWorkers || [],
-              dutyHistory: data.dutyHistory || []
+              dutyHistory: data.dutyHistory || [],
+              isBoss: data.isBoss || "",
+              employees: data.employees || [],
+              
             });
           }
         } else if (data.action === "hideUI") {
@@ -59,6 +60,7 @@ export const VisibilityProvider = ({ children }) => {
       value={{ 
         isVisible, 
         toggleVisibility,
+        setIsVisible,
         dutyData,
         setDutyData
       }}

@@ -1,96 +1,64 @@
-local duty = GetPlayerOnDuty()
+Duty = nil
 
 function ToggleDuty()
-    duty = not duty
-    local setNewDuty = SetDuty(duty)
-    if (not duty) then
-        lib.callback.await("yecoyz_duty:endTime", false)
+    Duty = not Duty
+    local setNewDuty = SetDuty(Duty)
+    if (not Duty) then
+        local endTime = lib.callback.await("yecoyz_duty:stopDuty", false)
+        if (not endTime) then return false end
     else
-        lib.callback.await("yecoyz_duty:startTime", false)
+        local startTime = lib.callback.await("yecoyz_duty:startDuty", false)
+        if (not startTime) then return false end
     end
-    return setNewDuty
+    return true
 end
 
-
 function SaveDutyHistory()
-    local kvpKey = "duty_history"
-    local history = json.decode(GetResourceKvpString(kvpKey) or "[]")
-
-    local startTime = lib.callback.await("yecoyz_duty:getActiveDutyTime", false)
-    if (not startTime) then return false end
-
-    local endTime = lib.callback.await("yecoyz_duty:getActiveEndDutyTime")
-    if (not endTime) then return false end
-
-    local duration = endTime - startTime
-
-    table.insert(history, {
-        startTime = startTime,
-        endTime = endTime,
-        startTimeFormatted = lib.callback.await("yecoyz_duty:formatTime", false, startTime),
-        endTimeFormatted = lib.callback.await("yecoyz_duty:formatTime", false, endTime),
-        duration = duration
-    })
-
-    SetResourceKvp(kvpKey, json.encode(history))
+    local updateHistory = lib.callback.await("yecoyz_duty:updateHistory", false)
+    if (not updateHistory) then return false end
 
     return true
 end
 
 function GetDutyHistory()
-    local kvpKey = "duty_history"
-    local history = json.decode(GetResourceKvpString(kvpKey) or "[]")
+    local history = lib.callback.await("yecoyz_duty:getHistory", false)
+    if (not history) then return "[]" end
+
     return history
 end
 
-RegisterCommand("OpenDuty", function()
-    SetNuiFocus(true, true)
+function GetIfBoss()
+    local isBoss = lib.callback.await("yecoyz_duty:isBoss", false)
+    if (not isBoss) then return false end
 
-    print(json.encode(ESX.PlayerData.job))
-
-    local playerName = GetPlayerName()
-    local playerJob = GetPlayerJobLabel()
-    local playerRank = GetPlayerJobGradeName()
-    local dutyStarted = nil
-
-    if (duty) then
-        dutyStarted = lib.callback.await("yecoyz_duty:getActiveDutyTime", false)
-    end
-
-    local activeWorkers = lib.callback.await("yecoyz_duty:getActiveWorkers", false, GetPlayerJobName())
-    if (not activeWorkers) then return false end
-
-    local dutyHistory = GetDutyHistory()
-
-    SendNUIMessage({
-        action = "showUI",
-        type = "dutyData",
-        name = playerName,
-        job = playerJob,
-        rank = playerRank,
-        isOnDuty = duty,
-        dutyStarted = lib.callback.await("yecoyz_duty:formatTime", false, dutyStarted), --os.date("%Y-%m-%d %H:%M:%S", dutyStarted),
-        activeWorkers = activeWorkers,
-        dutyHistory = dutyHistory
-    })
-end, false)
+    return isBoss
+end
 
 RegisterNUICallback("Eventhandler", function(data, cb)
     if (data.event == "toggleDuty") then
-        local newDutyState = not duty
+        local newDutyState = not Duty
 
         if (not newDutyState) then
             local saveHistory = SaveDutyHistory()
             if (not saveHistory) then return cb({success = false}) end
         end
         
-        local toggle = ToggleDuty()
-        if (not toggle) then return cb({success = false}) end
+        local toggleDuty = ToggleDuty()
+        if (not toggleDuty) then return cb({success = false}) end
 
-        return cb({
-            success = true,
-            isOnDuty = newDutyState,
-            dutyStarted = newDutyState and os.time() or nil
-        })
+        local getActiveDutyTime = lib.callback.await("yecoyz_duty:getActiveDutyTime", false)
+
+        return cb({ success = true, isOnDuty = Duty ,dutyStarted = getActiveDutyTime})
+    elseif (data.event == "getEmployeeHistory") then
+    local employeHistory = lib.callback.await("yecoyz_duty:getEmployeHistory", false, data.data.identifier)
+    print(json.encode(employeHistory))
+    return cb(employeHistory)
+    elseif (data.event == "closePage") then
+        SetNuiFocus(false, false)
+        return cb({ success = true })
     end
+
+    return cb({ success = false })
 end)
+
+exports("GetOwnHistory", GetDutyHistory)

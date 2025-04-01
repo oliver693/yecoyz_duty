@@ -12,6 +12,7 @@ client_scripts {
 }
 
 server_scripts {
+    "@oxmysql/lib/MySQL.lua",
     "server/framework/sv_framwork.lua",
     "server/sv_funcs.lua",
     "server/sv_main.lua",
@@ -22,8 +23,13 @@ shared_scripts {
     '@ox_lib/init.lua',
 }
 
-ui_page "nui_source/reload.html" -- Dev onl
+ui_page "nui_source/reload.html" -- Dev only
+
+-- ui_page "dist/index.html"
 
 files {
-    "nui_source/reload.html"
+    "nui_source/reload.html",
+    -- "dist/*.html",
+    -- "dist/assets/*.js",
+    -- "dist/assets/*.css",
 }
