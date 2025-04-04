@@ -106,3 +106,42 @@ lib.callback.register("yecoyz_duty:getEmployeHistory", function (source, identif
 
     return employeHistoyData
 end)
+
+
+function CalculateSalaryMultiplier(source)
+    if (not Config.SalaryMultiplier) then
+        return 1.0
+    end
+
+    if (not Cache.DutyData[source]) or (not Cache.DutyData[source].startTime) then
+        return 1.0
+    end
+
+    local currentTime = os.time()
+    local startTime = Cache.DutyData[source].startTime
+    local hoursOnDuty = (currentTime - startTime) / 3600
+
+    local multiplier = 1.0
+
+    for k, data in pairs(Config.Multiplier) do
+        if (hoursOnDuty >= data.hours) then
+            multiplier = data.multiplier
+        else 
+            break
+        end
+    end
+
+    return multiplier
+end
+
+exports("GetSalaryMultiplier", function(source)
+    return CalculateSalaryMultiplier(source)
+end)
+
+exports("GetOffDutyPayInfo", function()
+    local offDutyInfo = {
+        offDutyPay = Config.PayOffDuty,
+        multiplier  = Config.OffDutyMultiplier,
+    }
+    return offDutyInfo
+end)

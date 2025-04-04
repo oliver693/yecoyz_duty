@@ -46,7 +46,19 @@ function GetAllEmployees(jobName)
         local employees = MySQL.query.await("SELECT identifier, firstname, lastname FROM users WHERE job = ?", {jobName})
         return employees
     elseif (Framework == "QBCore") then
-        local employees = MySQL.query.await("SELECT citizenid, charinfo, job, jobgrade FROM players WHERE JSON_EXTRACT(job, '$.name') = ?", {jobName})
+        local rawEmployees = MySQL.query.await("SELECT citizenid, charinfo FROM players WHERE JSON_UNQUOTE(JSON_EXTRACT(job, '$.name')) = ?", {jobName})
+        local employees = {}
+
+        for i = 1, #rawEmployees do
+            local charinfo = json.decode(rawEmployees[i].charinfo)
+
+            employees[i] = {
+                identifier = rawEmployees[i].citizenid,
+                firstname = charinfo.firstname,
+                lastname = charinfo.lastname,
+            }
+        end
+
         return employees
     end
     return nil
