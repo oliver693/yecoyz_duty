@@ -43,19 +43,39 @@ end
 
 function GetAllEmployees(jobName)
     if (Framework == "ESX") then
-        local employees = MySQL.query.await("SELECT identifier, firstname, lastname FROM users WHERE job = ?", {jobName})
+        local employees = MySQL.query.await("SELECT identifier, firstname, lastname, phone_number, job, job_grade FROM users WHERE job = ?", {jobName})
+        
+        for i = 1, #employees do
+            local gradeResult = MySQL.query.await("SELECT label FROM job_grades WHERE job_name = ? AND grade = ?", {jobName, employees[i].job_grade})
+            local jobResult = MySQL.query.await("SELECT label FROM jobs WHERE name = ?", {jobName})
+
+            print(employees[i].phone_number)
+            employees[i] = {
+                identifier = employees[i].identifier,
+                firstname = employees[i].firstname,
+                lastname = employees[i].lastname,
+                phone_number = employees[i].phone_number or "Unknown",
+                job = jobResult[1] and jobResult[1].label or "Unknown",
+                job_grade = gradeResult[1] and gradeResult[1].label or "Unknown",
+            }
+        end
+
         return employees
     elseif (Framework == "QBCore") then
-        local rawEmployees = MySQL.query.await("SELECT citizenid, charinfo FROM players WHERE JSON_UNQUOTE(JSON_EXTRACT(job, '$.name')) = ?", {jobName})
+        local rawEmployees = MySQL.query.await("SELECT citizenid, charinfo, job FROM players WHERE JSON_UNQUOTE(JSON_EXTRACT(job, '$.name')) = ?", {jobName})
         local employees = {}
 
         for i = 1, #rawEmployees do
             local charinfo = json.decode(rawEmployees[i].charinfo)
+            local jobinfo = json.decode(rawEmployees[i].job)
 
             employees[i] = {
                 identifier = rawEmployees[i].citizenid,
                 firstname = charinfo.firstname,
                 lastname = charinfo.lastname,
+                phone_number = charinfo.phone,
+                job = jobinfo.label,
+                job_grade = jobinfo.grade.name
             }
         end
 
@@ -91,7 +111,7 @@ function GetActiveWorkers(jobName)
         for i = 1, #playersWithSameJob do
             local player = playersWithSameJob[i]
             local playerData = ESX.GetPlayerFromId(player)
-            
+            print(player)
             if playerData.job.name == jobName and playerData.job.onDuty then
                 activeWorkers[i] = {
                     source = playerData.source,
@@ -100,7 +120,8 @@ function GetActiveWorkers(jobName)
                     job = playerData.job.label,
                     grade = playerData.job.grade_label,
                     phone = GetPhoneNumber(playerData.identifier) or "0",
-                    dutyTime = FormatDutyTime(Cache.DutyData[playerData.source] and Cache.DutyData[playerData.source].startTime)
+                    dutyTime = FormatDutyTime(Cache.DutyData[playerData.source] and Cache.DutyData[playerData.source].startTime),
+                    online = true
                 }
             end
         end
@@ -119,6 +140,7 @@ function GetActiveWorkers(jobName)
                     grade = player.PlayerData.job.grade.label,
                     phone = GetPhoneNumber(player.PlayerData.citizenid) or "0",
                     dutyTime = Cache.DutyData[player.PlayerData.source] and os.date("%H:%M:%S", Cache.DutyData[player.PlayerData.source].startTime) or "N/A",
+                    online = true
                 }
             end
         end

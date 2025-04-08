@@ -10,25 +10,25 @@ end
 
 function GetPlayerJobGradeName()
     if (Framework == "ESX") then
-        return ESX.PlayerData.job.grade_label
+        return ESX.GetPlayerData().job.grade_label
     elseif (Framework == "QBCore") then
         return QBCore.Functions.GetPlayerData().job.grade.label
     end
     return nil
 end
 
-function GetPlayerName()
+function GetPlayerFullName()
     if (Framework == "ESX") then
-        return ESX.PlayerData.firstName .. " " .. ESX.PlayerData.lastName
+        return ESX.GetPlayerData().firstName .. " " .. ESX.GetPlayerData().lastName .. ""
     elseif (Framework == "QBCore") then
-        return QBCore.Functions.GetPlayerData().charinfo.firstname .. " " .. QBCore.Functions.GetPlayerData().charinfo.lastname
+        return QBCore.Functions.GetPlayerData().charinfo.firstname .. " " .. QBCore.Functions.GetPlayerData().charinfo.lastname .. ""
     end
     return nil
 end
 
 function GetPlayerJobLabel()
     if (Framework == "ESX") then
-        return ESX.PlayerData.job.label
+        return ESX.GetPlayerData().job.label
     elseif (Framework == "QBCore") then
         return QBCore.Functions.GetPlayerData().job.label
     end
@@ -37,7 +37,7 @@ end
 
 function GetPlayerJobName()
     if (Framework == "ESX") then
-        return ESX.PlayerData.job.name
+        return ESX.GetPlayerData().job.name
     elseif (Framework == "QBCore") then
         return QBCore.Functions.GetPlayerData().job.name
     end
@@ -46,7 +46,7 @@ end
 
 function GetPlayerOnDuty()
     if (Framework == "ESX") then
-        return ESX.PlayerData.job.onDuty
+        return ESX.GetPlayerData().job.onDuty
     elseif (Framework == "QBCore") then
         print("onDuty QBCORE?", QBCore.Functions.GetPlayerData().job.onduty)
         return QBCore.Functions.GetPlayerData().job.onduty
@@ -56,8 +56,8 @@ end
 
 function SetDuty(status)
     if (Framework == "ESX") then
-        ESX.PlayerData.job.onDuty = status
-        return ESX.PlayerData.job.onDuty
+        ESX.GetPlayerData().job.onDuty = status
+        return ESX.GetPlayerData().job.onDuty
     elseif (Framework == "QBCore") then
         local setDuty = lib.callback.await("yecoyz_duty:setDuty", false, status)
         if (not setDuty) then return false end

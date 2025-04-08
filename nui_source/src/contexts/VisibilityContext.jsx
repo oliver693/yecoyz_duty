@@ -1,0 +1,104 @@
+import React, { createContext, useContext, useState, useEffect } from "react";
+
+const VisibilityContext = createContext();
+
+export const useVisibility = () => useContext(VisibilityContext);
+
+export const VisibilityProvider = ({ children }) => {
+  const [isVisible, setIsVisible] = useState(false);
+  const [workerData, setWorkerData] = useState(null);
+  const [shiftsData, setShiftsData] = useState(null);
+  const [characterData, setCharacterData] = useState({
+    name: "",
+    job: "",
+    grade: "",
+    isOnDuty: false,
+    dutyStarted: null
+  });
+  
+  const toggleVisibility = () => {
+    setIsVisible((prev) => !prev);
+  };
+  
+  // Function to toggle duty status and send message back to client
+  const toggleDuty = () => {
+    const newDutyStatus = !characterData.isOnDuty;
+    
+    // Update local state
+    setCharacterData({
+      ...characterData,
+      isOnDuty: newDutyStatus,
+      dutyStarted: newDutyStatus ? new Date() : null
+    });
+    
+    // Send message to client
+    window.parent.postMessage({
+      action: "toggleDuty",
+      isOnDuty: newDutyStatus
+    }, "*");
+  };
+  
+  useEffect(() => {
+    const handleMessage = (event) => {
+      const data = event.data;
+      
+      if (data) {
+        if (data.action === "showUI") {
+          setIsVisible(true);
+          
+          if (data.workers) {
+            setWorkerData(data.workers);
+          }
+          
+          if (data.shifts) {
+            setShiftsData(data.shifts);
+          }
+
+          if (data.character) {
+            setCharacterData({
+              ...data.character,
+              isOnDuty: data.character.isOnDuty !== undefined ? data.character.isOnDuty : false,
+              dutyStarted: data.character.dutyStarted ? new Date(data.character.dutyStarted) : null
+            });
+          }
+        } else if (data.action === "hideUI") {
+          setIsVisible(false);
+        } else if (data.action === "updateWorkers") {
+          setWorkerData(data.workers);
+        } else if (data.action === "updateShifts") {
+          setShiftsData(data.shifts);
+        } else if (data.action === "updateCharacter") {
+          setCharacterData({
+            ...data.character,
+            isOnDuty: data.character.isOnDuty !== undefined ? data.character.isOnDuty : characterData.isOnDuty,
+            dutyStarted: data.character.dutyStarted ? new Date(data.character.dutyStarted) : characterData.dutyStarted
+          });
+
+          console.log(data.character.isOnDuty)
+        }
+      }
+    };
+    
+    window.addEventListener("message", handleMessage);
+    return () => window.removeEventListener("message", handleMessage);
+  }, [characterData.isOnDuty, characterData.dutyStarted]);
+  
+  return (
+    <VisibilityContext.Provider
+      value={{ 
+        isVisible, 
+        toggleVisibility,
+        setIsVisible,
+        workerData,
+        shiftsData,
+        characterData,
+        toggleDuty,
+        setWorkerData,
+        setShiftsData,
+        setCharacterData
+      }}
+    >
+      {children}
+    </VisibilityContext.Provider>
+  );
+};

@@ -48,16 +48,20 @@ RegisterNUICallback("Eventhandler", function(data, cb)
 
         local getActiveDutyTime = lib.callback.await("yecoyz_duty:getActiveDutyTime", false)
 
+        SendNUIMessage({
+            action = "updateCharacter",
+            character = {isOnDuty = newDutyState, dutyStarted = getActiveDutyTime}
+        })
+        print(newDutyState)
         return cb({ success = true, isOnDuty = Duty ,dutyStarted = getActiveDutyTime})
     elseif (data.event == "getEmployeeHistory") then
-    local employeHistory = lib.callback.await("yecoyz_duty:getEmployeHistory", false, data.data.identifier)
-    print(json.encode(employeHistory))
-    return cb(employeHistory)
+    local employeHistory = lib.callback.await("yecoyz_duty:getEmployeHistory", false, data.data)
+        return cb(employeHistory)
     elseif (data.event == "closePage") then
         SetNuiFocus(false, false)
         return cb({ success = true })
     end
-
+    
     return cb({ success = false })
 end)
 
