@@ -1,7 +1,9 @@
 import React from 'react';
 import { UserCircle } from 'lucide-react';
+import { useTranslation } from "../contexts/TranslationProvider";
 
 function EmptyState() {
+  const { t } = useTranslation();
   const styles = {
     noWorkers: {
       display: 'flex',
@@ -31,8 +33,8 @@ function EmptyState() {
   return (
     <div style={styles.noWorkers}>
       <UserCircle size={60} color="#666" style={styles.noWorkersIcon} />
-      <div style={styles.noWorkersText}>No workers available</div>
-      <div style={styles.noWorkersSubtext}>Workers will appear here when added</div>
+      <div style={styles.noWorkersText}>{t("ui_NoWorkersAvalibale")}</div>
+      <div style={styles.noWorkersSubtext}>{t("ui_WorkersWillAppearWhenAdded")}</div>
     </div>
   );
 }

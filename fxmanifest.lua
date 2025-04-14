@@ -32,4 +32,6 @@ files {
     -- "dist/*.html",
     -- "dist/assets/*.js",
     -- "dist/assets/*.css",
+
+    "locales/*.json"
 }

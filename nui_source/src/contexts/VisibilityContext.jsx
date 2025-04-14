@@ -8,6 +8,7 @@ export const VisibilityProvider = ({ children }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [workerData, setWorkerData] = useState(null);
   const [shiftsData, setShiftsData] = useState(null);
+  const [translations, setTranslations] = useState({});
   const [characterData, setCharacterData] = useState({
     name: "",
     job: "",
@@ -24,19 +25,13 @@ export const VisibilityProvider = ({ children }) => {
   const toggleDuty = () => {
     const newDutyStatus = !characterData.isOnDuty;
     
-    // Update local state
     setCharacterData({
       ...characterData,
       isOnDuty: newDutyStatus,
-      dutyStarted: newDutyStatus ? new Date() : null
+      dutyStarted: newDutyStatus ? Math.floor(Date.now() / 1000) : null // Spara tidsstämpel i sekunder
     });
-    
-    // Send message to client
-    window.parent.postMessage({
-      action: "toggleDuty",
-      isOnDuty: newDutyStatus
-    }, "*");
   };
+  
   
   useEffect(() => {
     const handleMessage = (event) => {
@@ -60,6 +55,11 @@ export const VisibilityProvider = ({ children }) => {
               isOnDuty: data.character.isOnDuty !== undefined ? data.character.isOnDuty : false,
               dutyStarted: data.character.dutyStarted ? new Date(data.character.dutyStarted) : null
             });
+
+            if (data.translations) {
+              setTranslations(data.translations)
+            }
+
           }
         } else if (data.action === "hideUI") {
           setIsVisible(false);
@@ -95,7 +95,8 @@ export const VisibilityProvider = ({ children }) => {
         toggleDuty,
         setWorkerData,
         setShiftsData,
-        setCharacterData
+        setCharacterData,
+        translations
       }}
     >
       {children}

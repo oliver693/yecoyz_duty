@@ -1,12 +1,9 @@
 lib.callback.register("yecoyz_duty:getActiveWorkers", function (soure, jobName)
-    local activeWorkersData = GetActiveWorkers(jobName)
-    if (not activeWorkersData) then return false end
-
-    return activeWorkersData
+    return GetActiveWorkers(jobName)
 end)
 
 lib.callback.register("yecoyz_duty:getAllEmployees", function(source, jobName)
-    return GetAllEmployees(jobName) or nil
+    return GetAllEmployees(jobName)
 end)
 
 lib.callback.register("yecoyz_duty:getActiveDutyTime", function(source)
@@ -23,15 +20,20 @@ lib.callback.register("yecoyz_duty:formatTime", function (source, time)
 end)
 
 lib.callback.register("yecoyz_duty:startDuty", function(source)
+    local getMultiplier = GetMultiplier(source)
     local timeNow = os.time()
     Cache.DutyData[source] = {
         onDuty = true,
-        startTime = timeNow
+        startTime = timeNow,
+        multiplier = getMultiplier,
     }
     return true
 end)
 
 lib.callback.register("yecoyz_duty:stopDuty", function(source)
+    local saveData = SaveMultiplierAndEndTime(source)
+    if (not saveData) then return false end
+    
     Cache.DutyData[source] = {}
     return true
 end)
@@ -40,12 +42,21 @@ lib.callback.register("yecoyz_duty:isBoss", function(source)
     return GetBossPermission(source)
 end)
 
+function SaveMultiplierAndEndTime(source)
+    local updateData = MySQL.update.await("UPDATE yecoyz_duty SET multiplier = ?, offDuty = ? WHERE identifier = ?", {
+        CalculateSalaryMultiplier(source), os.time(), GetIdentifier(source)
+    })
+
+    if (not updateData) then return false end
+
+    return true
+end
+
 function FormatDutyTime(startTime)
     if (not startTime) then return "N/A" end
     local elapsedSeconds = os.time() - startTime
     return string.format("%d h, %d m", math.floor(elapsedSeconds / 3600), math.floor((elapsedSeconds % 3600) / 60))
 end
-
 
 lib.callback.register("yecoyz_duty:updateHistory", function(source)
     local startTime = Cache.DutyData[source].startTime
@@ -107,28 +118,50 @@ lib.callback.register("yecoyz_duty:getEmployeHistory", function (source, identif
     return employeHistoyData
 end)
 
+function GetMultiplier(source)
+    local identifier = GetIdentifier(source)
+    if (not identifier) then return nil end
+
+    local job = GetPlayerJob(source)
+    if (not job) then return nil elseif (not Config.MultiplierSettings.Multiplier[job]) then return 1.0 end
+
+    local multiplierData = MySQL.single.await("SELECT `multiplier`, `offDuty` FROM yecoyz_duty WHERE `identifier` = ? LIMIT 1", {identifier})
+    if (not multiplierData) then return nil end
+
+    local timeNow = os.time()
+    
+    local hoursPassed = (timeNow - multiplierData.offDuty) / 3600
+    
+    local multiplier = multiplierData.multiplier
+    if (hoursPassed >= 1) then
+        multiplier = multiplierData.multiplier - (Config.MultiplierSettings.hourlyloss * hoursPassed)
+        if multiplier < 1.0 then
+            multiplier = 1.0
+        end
+    end
+    
+    return multiplier or 1.0
+end
 
 function CalculateSalaryMultiplier(source)
-    if (not Config.SalaryMultiplier) then
-        return 1.0
-    end
-
+    if (not Config.MultiplierSettings.SalaryMultiplier) then return 1.0 end
     if (not Cache.DutyData[source]) or (not Cache.DutyData[source].startTime) then
         return 1.0
     end
+    
+    local job = GetPlayerJob(source)
+    if (not job) then return nil elseif (not Config.MultiplierSettings.Multiplier[job]) then return 1.0 end
 
     local currentTime = os.time()
     local startTime = Cache.DutyData[source].startTime
     local hoursOnDuty = (currentTime - startTime) / 3600
+    
+    local baseMultiplier = Cache.DutyData[source].multiplier or 1.0
 
-    local multiplier = 1.0
+    local multiplier = baseMultiplier + (hoursOnDuty * Config.MultiplierSettings.Multiplier[job].increasePerHour)
 
-    for k, data in pairs(Config.Multiplier) do
-        if (hoursOnDuty >= data.hours) then
-            multiplier = data.multiplier
-        else 
-            break
-        end
+    if multiplier > Config.MultiplierSettings.Multiplier[job].maxMultiplier then
+        multiplier = Config.MultiplierSettings.Multiplier[job].maxMultiplier
     end
 
     return multiplier
@@ -140,8 +173,16 @@ end)
 
 exports("GetOffDutyPayInfo", function()
     local offDutyInfo = {
-        offDutyPay = Config.PayOffDuty,
-        multiplier  = Config.OffDutyMultiplier,
+        offDutyPay = Config.OffDutySettings.PayOffDuty,
+        multiplier  = Config.OffDutySettings.OffDutyMultiplier,
     }
     return offDutyInfo
 end)
+
+RegisterCommand("givemu", function (source)
+    Cache.DutyData[source].multiplier = 10
+end, false)
+
+RegisterCommand("mu", function (source)
+    print(CalculateSalaryMultiplier(source))
+end, false)

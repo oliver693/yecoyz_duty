@@ -4,8 +4,10 @@ import ActiveWorkers from '../pages/ActiveWorkers';
 import History from '../pages/History';
 import ManageWorkers from '../pages/ManageWorkers';
 import { Users, Clock, Settings } from 'lucide-react';
+import { useTranslation } from "../contexts/TranslationProvider";
 
 const TabSelector = () => {
+  const { t } = useTranslation();
   const { activeTab, switchTab, canManage } = useTab();
   const [displayStyle, setDisplayStyle] = useState('segment'); // Only segment style
 
@@ -97,14 +99,14 @@ const TabSelector = () => {
             onClick={() => switchTab('activeworkers')}
           >
             <Users style={tabStyle.icon} />
-            Workers
+            {t("ui_tabWorkers")}
           </button>
           <button 
             style={activeTab === 'history' ? {...tabStyle.segmentButton, ...tabStyle.activeSegment} : tabStyle.segmentButton}
             onClick={() => switchTab('history')}
           >
             <Clock style={tabStyle.icon} />
-            History
+            {t("ui_tabHistory")}
           </button>
           {canManage && (
             <button 
@@ -112,7 +114,7 @@ const TabSelector = () => {
               onClick={() => switchTab('manageworkers')}
             >
               <Settings style={tabStyle.icon} />
-              Manage Workers
+              {t("ui_tabManageWorkers")}
             </button>
           )}
         </div>

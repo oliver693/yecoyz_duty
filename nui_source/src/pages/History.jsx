@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import Statistics from '../components/Statistics';
 import HistoryList from '../components/HistoryList';
 import { useVisibility } from '../contexts/VisibilityContext';
+import { useTranslation } from "../contexts/TranslationProvider";
 
 function History() {
   const { shiftsData } = useVisibility();
-  
+  const { t } = useTranslation();
+
   const defaultShifts = [
     {"endTimeFormatted":"2025-04-05 18:30:47","startTimeFormatted":"2025-04-05 10:15:41","duration":498, "endTime":1743357047,"startTime":1743324941},
     {"endTimeFormatted":"2025-04-04 16:43:47","startTimeFormatted":"2025-04-04 09:30:41","duration":433, "endTime":1743276227,"startTime":1743250241},
@@ -60,7 +62,7 @@ function History() {
   return (
     <div style={styles.container}>
       <div style={styles.header}>
-        <div style={styles.title}>History</div>
+        <div style={styles.title}>{t("ui_history")}</div>
       </div>
 
       <div style={styles.sectionsContainer}>

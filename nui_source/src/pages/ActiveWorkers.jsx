@@ -4,10 +4,12 @@ import StatusLegend from '../components/StatusLegend';
 import Pagination from '../components/Pagination';
 import EmptyState from '../components/EmptyState';
 import { useVisibility } from '../contexts/VisibilityContext';
+import { useTranslation } from "../contexts/TranslationProvider";
 
 function ActiveWorkers() {
   const { workerData } = useVisibility();
-  
+  const { t } = useTranslation();
+
   const defaultWorkers = [
     {
       "dutyTime": "N/A",
@@ -168,8 +170,8 @@ function ActiveWorkers() {
   return (
     <div style={styles.container}>
       <div style={styles.header}>
-        <div style={styles.title}>Workers List</div>
-        <div style={styles.count}>{onlineCount} online</div>
+        <div style={styles.title}>{t("ui_workersList")}</div>
+        <div style={styles.count}>{onlineCount} {t("ui_online")}</div>
       </div>
       
       <StatusLegend />

@@ -1,3 +1,4 @@
+lib.locale()
 Duty = nil
 
 function ToggleDuty()
@@ -36,6 +37,7 @@ end
 
 RegisterNUICallback("Eventhandler", function(data, cb)
     if (data.event == "toggleDuty") then
+        Duty = GetPlayerOnDuty()
         local newDutyState = not Duty
 
         if (not newDutyState) then
@@ -52,11 +54,21 @@ RegisterNUICallback("Eventhandler", function(data, cb)
             action = "updateCharacter",
             character = {isOnDuty = newDutyState, dutyStarted = getActiveDutyTime}
         })
-        print(newDutyState)
+        print("Togglar och nya duty är: ", newDutyState)
         return cb({ success = true, isOnDuty = Duty ,dutyStarted = getActiveDutyTime})
     elseif (data.event == "getEmployeeHistory") then
     local employeHistory = lib.callback.await("yecoyz_duty:getEmployeHistory", false, data.data)
         return cb(employeHistory)
+    elseif (data.event == ("getLocale")) then
+        local uiLocales = {}
+        local locales = lib.getLocales()
+        
+        for k, v in pairs(locales) do
+            if (k:find("^ui_")) then
+                uiLocales[k] = v
+            end
+        end
+        return cb(uiLocales)
     elseif (data.event == "closePage") then
         SetNuiFocus(false, false)
         return cb({ success = true })

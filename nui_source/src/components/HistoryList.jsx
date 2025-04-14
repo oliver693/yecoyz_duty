@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { Calendar, Clock, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useTranslation } from "../contexts/TranslationProvider";
 
 function HistoryList({ shifts }) {
-  // Pagination state
+  const { t } = useTranslation();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 3;
   const totalPages = Math.ceil(shifts.length / itemsPerPage);
   
-  // Format datetime string to more readable format
   const formatDateTime = (dateTimeStr) => {
     const date = new Date(dateTimeStr);
     return date.toLocaleDateString('en-US', { 
@@ -19,7 +19,6 @@ function HistoryList({ shifts }) {
     });
   };
   
-  // Format duration in minutes to hours and minutes
   const formatDuration = (minutes) => {
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
@@ -229,7 +228,7 @@ function HistoryList({ shifts }) {
   return (
     <div style={styles.section}>
       <div style={styles.sectionHeader}>
-        <span>Shifts History</span>
+        <span>{t("ui_shiftsHistory")}</span>
       </div>
       {shifts.length > 0 ? (
         <>
@@ -302,7 +301,7 @@ function HistoryList({ shifts }) {
       ) : (
         <div style={styles.emptyState}>
           <Calendar size={40} color="#666" style={styles.emptyStateIcon} />
-          <div style={styles.emptyStateText}>No shifts recorded yet</div>
+          <div style={styles.emptyStateText}>{t("ui_shiftsNoRecord")}</div>
         </div>
       )}
     </div>

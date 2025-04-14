@@ -1,8 +1,9 @@
 import React from 'react';
 import { Filter } from 'lucide-react';
+import { useTranslation } from "../contexts/TranslationProvider";
 
 function Statistics({ shifts, activeFilter, setActiveFilter, filters }) {
-  // Calculate statistics based on shifts and filter
+  const { t } = useTranslation();
   const calculateStats = () => {
     if (shifts.length === 0) return { count: 0, totalTime: 0, avgTime: 0 };
 
@@ -123,7 +124,7 @@ function Statistics({ shifts, activeFilter, setActiveFilter, filters }) {
   return (
     <div style={styles.section}>
       <div style={styles.sectionHeader}>
-        <span>Statistics</span>
+        <span>{t("ui_statistics")}</span>
         <div style={styles.filterContainer}>
           {filters.map(filter => (
             <button
@@ -144,15 +145,15 @@ function Statistics({ shifts, activeFilter, setActiveFilter, filters }) {
       <div style={styles.statsGrid}>
         <div style={styles.statCard}>
           <div style={styles.statValue}>{stats.count}</div>
-          <div style={styles.statLabel}>Total Shifts</div>
+          <div style={styles.statLabel}>{t("ui_totalShifts")}</div>
         </div>
         <div style={styles.statCard}>
           <div style={styles.statValue}>{formatDuration(stats.totalTime)}</div>
-          <div style={styles.statLabel}>Working Time</div>
+          <div style={styles.statLabel}>{t("ui_workingTime")}</div>
         </div>
         <div style={styles.statCard}>
           <div style={styles.statValue}>{formatDuration(Math.round(stats.avgTime))}</div>
-          <div style={styles.statLabel}>Average Shift</div>
+          <div style={styles.statLabel}>{t("ui_averageShift")}</div>
         </div>
       </div>
     </div>

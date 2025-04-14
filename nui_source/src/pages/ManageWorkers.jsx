@@ -4,11 +4,11 @@ import Statistics from '../components/Statistics';
 import HistoryList from '../components/HistoryList';
 import { useVisibility } from '../contexts/VisibilityContext';
 import { callback } from '../utilites/callback';
+import { useTranslation } from "../contexts/TranslationProvider";
 
 function ManageWorkers() {
   const { workerData, shiftsData } = useVisibility();
-  
-  // Default worker data if context data is not available
+  const { t } = useTranslation();
   const defaultWorkers = [
     { id: 1, name: 'John Doe', identifier: 'ABCD123', online: true, job: 'Mechanic', avatar: 'https://i.pravatar.cc/150?img=1' },
     { id: 2, name: 'Jane Smith', identifier: 'EFGH456', online: true, job: 'Mechanic', avatar: 'https://i.pravatar.cc/150?img=2' },
@@ -16,7 +16,6 @@ function ManageWorkers() {
     { id: 4, name: 'Sam Wilson', identifier: 'MNOP012', online: false, job: 'Mechanic', avatar: 'https://i.pravatar.cc/150?img=4' }
   ];
   
-  // Default shifts data if context data is not available
   const defaultShifts = [
     {
       startTimeFormatted: '2025-04-03T09:30:00',
@@ -293,20 +292,19 @@ function ManageWorkers() {
       <div style={styles.header}>
         <div style={styles.headerTitle}>
           <Users size={20} />
-          Manage Workers
+          {t("ui_manageWorkers")}
         </div>
         <div style={styles.searchContainer}>
           <Search size={16} style={styles.searchIcon} />
           <input 
             type="text" 
-            placeholder="Search workers..." 
+            placeholder={t("ui_searchWorkers")} 
             style={styles.searchInput}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
       </div>
-      {/* Content - Workers List */}
       <div 
         className="workers-list-scroll" 
         style={styles.content}
@@ -339,7 +337,7 @@ function ManageWorkers() {
           {/* Online workers section */}
           {onlineWorkers.length > 0 && (
             <div>
-              <div style={styles.sectionDivider}>Online Workers</div>
+              <div style={styles.sectionDivider}>{t("ui_onlineWorkers")}</div>
               <div style={styles.workersGroup}>
                 {onlineWorkers.map(worker => (
                   <div 
@@ -365,7 +363,7 @@ function ManageWorkers() {
           {/* Offline workers section */}
           {offlineWorkers.length > 0 && (
             <div>
-              <div style={styles.sectionDivider}>Offline Workers</div>
+              <div style={styles.sectionDivider}>{t("ui_offlineWorkers")}</div>
               <div style={styles.workersGroup}>
                 {offlineWorkers.map(worker => (
                   <div 
@@ -391,7 +389,7 @@ function ManageWorkers() {
           {filteredWorkers.length === 0 && (
             <div style={styles.emptyState}>
               <Users size={32} style={styles.emptyStateIcon} />
-              <div style={styles.emptyStateText}>No workers found</div>
+              <div style={styles.emptyStateText}>{t("ui_noWorkersFound")}</div>
             </div>
           )}
         </div>
@@ -405,7 +403,7 @@ function ManageWorkers() {
               onClick={handleCloseWorkerDetails}
             >
               <ChevronLeft size={18} />
-              <span>Back to Workers</span>
+              <span>{t("ui_backToWorkers")}</span>
             </div>
             <div 
               style={styles.closeButton}

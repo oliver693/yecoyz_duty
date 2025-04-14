@@ -34,8 +34,20 @@ function GetIdentifier(source)
     if (Framework == "ESX") then
         return player.getIdentifier()
     elseif (Framework == "QBCore") then
-        local Player = QBCore.Functions.GetPlayer(source)
-        return Player.PlayerData.citizenid
+        return player.PlayerData.citizenid
+    end
+
+    return nil
+end
+
+function GetPlayerJob(source)
+    local player = GetPlayerFromId(source)
+    if (not player) then return nil end
+
+    if (Framework == "ESX") then
+        return player.getJob().name
+    elseif (Framework == "QBCore") then
+        return player.PlayerData.job.name
     end
 
     return nil
@@ -81,7 +93,7 @@ function GetAllEmployees(jobName)
 
         return employees
     end
-    return nil
+    return {}
 end
 
 function GetBossPermission(source)
@@ -111,7 +123,6 @@ function GetActiveWorkers(jobName)
         for i = 1, #playersWithSameJob do
             local player = playersWithSameJob[i]
             local playerData = ESX.GetPlayerFromId(player)
-            print(player)
             if playerData.job.name == jobName and playerData.job.onDuty then
                 activeWorkers[i] = {
                     source = playerData.source,
@@ -147,7 +158,7 @@ function GetActiveWorkers(jobName)
         return activeWorkers
     end
 
-    return nil
+    return activeWorkers
 end
 
 
@@ -167,14 +178,17 @@ function GetPhoneNumber(identifier)
 end
 
 lib.callback.register("yecoyz_duty:setDuty", function(source, status)
-    if (Framework == "QBCore") then
+    if (Framework == "ESX") then
+        local Player = GetPlayerFromId(source)
+        if (not Player) then return false end
+        Player.setJob(Player.job.name, Player.job.grade, status)
+        return Player.job.onDuty
+    elseif (Framework == "QBCore") then
         local Player = QBCore.Functions.GetPlayer(source)
         if (not Player) then return false end
 
-        Player.Functions.SetJobDuty(status)
-
-        return true
+        return Player.Functions.SetJobDuty(status)
     end
 
-    return false
+    return nil
 end)

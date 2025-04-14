@@ -1,6 +1,8 @@
 import React from 'react';
+import { useTranslation } from "../contexts/TranslationProvider";
 
 function StatusLegend() {
+  const { t } = useTranslation();
   const styles = {
     statusLegend: {
       display: 'flex',
@@ -27,11 +29,11 @@ function StatusLegend() {
     <div style={styles.statusLegend}>
       <div style={styles.statusItem}>
         <div style={{ ...styles.statusDot, backgroundColor: '#4CAF50' }}></div>
-        <span>Online</span>
+        <span>{t("ui_online")}</span>
       </div>
       <div style={styles.statusItem}>
         <div style={{ ...styles.statusDot, backgroundColor: '#F44336' }}></div>
-        <span>Offline</span>
+        <span>{t("ui_offline")}</span>
       </div>
     </div>
   );

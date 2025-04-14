@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { UserCircle, Clock, LogIn, LogOut } from 'lucide-react';
-import { useVisibility } from '../contexts/VisibilityContext';;
+import { useVisibility } from '../contexts/VisibilityContext';
 import { callback } from '../utilites/callback';
+import { useTranslation } from "../contexts/TranslationProvider";
+
 const Profile = () => {
+  const { t } = useTranslation();
   const { characterData, toggleDuty, isVisible } = useVisibility();
   const { name, job, grade, isOnDuty, dutyStarted } = characterData;
   const [dutyTime, setDutyTime] = useState(0);
@@ -10,9 +13,7 @@ const Profile = () => {
   useEffect(() => {
     let timer;
     if (isOnDuty) {
-      console.log(dutyStarted)
       const startTime = dutyStarted ? new Date(dutyStarted * 1000) : new Date();
-
       timer = setInterval(() => {
         const currentTime = new Date();
         const elapsedSeconds = Math.floor((currentTime - startTime) / 1000);
@@ -41,7 +42,6 @@ const Profile = () => {
     })
   }
   
-  // Status colors
   const dotColor = isOnDuty ? '#2C974B' : '#E5534B';
   const textColor = '#a0a0a0';
   
@@ -157,13 +157,13 @@ const Profile = () => {
         <div style={profileStyle.infoSection}>
           <div style={profileStyle.name}>{name}</div>
           <div style={profileStyle.job}>{job}</div>
-          <div style={profileStyle.grade}>Grade: {grade}</div>
+          <div style={profileStyle.grade}>{t("ui_profileGrade")} {grade}</div>
         </div>
         
         <div style={profileStyle.buttonSection}>
           <div style={profileStyle.statusIndicator}>
             <div style={profileStyle.statusDot}></div>
-            {isOnDuty ? 'On Duty' : 'Off Duty'}
+            {isOnDuty ? t("ui_proflieOnDuty") : t("ui_proflieOffDuty")}
           </div>
           
           <div style={profileStyle.dutyTimeContainer}>
@@ -178,12 +178,12 @@ const Profile = () => {
             {isOnDuty ? (
               <>
                 <LogOut size={16} />
-                Go Off Duty
+                {t("ui_proflieGoOffDuty")}
               </>
             ) : (
               <>
                 <LogIn size={16} />
-                Go On Duty
+                {t("ui_proflieGoOnDuty")}
               </>
             )}
           </button>

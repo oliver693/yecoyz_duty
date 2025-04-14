@@ -48,47 +48,38 @@ function Pagination({ currentPage, totalPages, handlePageChange }) {
     }
   };
 
-  // Calculate pagination controls
   const getPageNumbers = () => {
     const pageNumbers = [];
-    const maxVisiblePages = 5; // Maximum visible page numbers
+    const maxVisiblePages = 5;
     
     if (totalPages <= maxVisiblePages) {
-      // Show all pages if total pages <= max visible pages
       for (let i = 1; i <= totalPages; i++) {
         pageNumbers.push(i);
       }
     } else {
-      // Always include first page
       pageNumbers.push(1);
       
-      // Calculate start and end of the sliding window
       let startPage = Math.max(2, currentPage - 1);
       let endPage = Math.min(totalPages - 1, currentPage + 1);
-      
-      // Adjust window if we're at the edges
+
       if (currentPage <= 2) {
         endPage = Math.min(totalPages - 1, 4);
       } else if (currentPage >= totalPages - 1) {
         startPage = Math.max(2, totalPages - 3);
       }
       
-      // Add ellipsis after first page if needed
       if (startPage > 2) {
         pageNumbers.push('...');
       }
       
-      // Add pages in the sliding window
       for (let i = startPage; i <= endPage; i++) {
         pageNumbers.push(i);
       }
       
-      // Add ellipsis before last page if needed
       if (endPage < totalPages - 1) {
         pageNumbers.push('...');
       }
       
-      // Always include last page
       pageNumbers.push(totalPages);
     }
     
@@ -104,7 +95,6 @@ function Pagination({ currentPage, totalPages, handlePageChange }) {
           }
         `}
       </style>
-      {/* First page button */}
       <button
         className="pagination-button"
         style={{
@@ -118,7 +108,6 @@ function Pagination({ currentPage, totalPages, handlePageChange }) {
         <ChevronsLeft size={16} />
       </button>
       
-      {/* Previous page button */}
       <button
         className="pagination-button"
         style={{
@@ -132,7 +121,6 @@ function Pagination({ currentPage, totalPages, handlePageChange }) {
         <ChevronLeft size={16} />
       </button>
       
-      {/* Page numbers */}
       {getPageNumbers().map((pageNumber, index) => (
         typeof pageNumber === 'number' ? (
           <button
@@ -155,7 +143,6 @@ function Pagination({ currentPage, totalPages, handlePageChange }) {
         )
       ))}
       
-      {/* Next page button */}
       <button
         className="pagination-button"
         style={{
@@ -169,7 +156,6 @@ function Pagination({ currentPage, totalPages, handlePageChange }) {
         <ChevronRight size={16} />
       </button>
       
-      {/* Last page button */}
       <button
         className="pagination-button"
         style={{

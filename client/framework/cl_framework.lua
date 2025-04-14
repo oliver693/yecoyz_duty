@@ -55,19 +55,15 @@ function GetPlayerOnDuty()
 end
 
 function SetDuty(status)
-    if (Framework == "ESX") then
-        ESX.GetPlayerData().job.onDuty = status
-        return ESX.GetPlayerData().job.onDuty
-    elseif (Framework == "QBCore") then
-        local setDuty = lib.callback.await("yecoyz_duty:setDuty", false, status)
-        if (not setDuty) then return false end
-        return setDuty
-    end
-    return nil
+    print("Settings duty:", status)
+    return lib.callback.await("yecoyz_duty:setDuty", false, status)
 end
 
 if (Framework == "ESX") then
     RegisterNetEvent('esx:playerLoaded', function()
+        while (not ESX.IsPlayerLoaded()) do
+            Wait(100)
+        end
         Duty = GetPlayerOnDuty()
         if (Duty) then
             local startDutyTime = lib.callback.await("yecoyz_duty:startDuty", false)
@@ -78,7 +74,7 @@ if (Framework == "ESX") then
         local onDuty = GetPlayerOnDuty()
 
         if (onDuty) then
-            local endDuty = lib.callback.await("yecoyz_duty:endDuty")
+            local endDuty = lib.callback.await("yecoyz_duty:stopDuty")
             SetDuty(false)
         end
     end)
@@ -94,7 +90,7 @@ elseif (Framework == "QBCore") then
         local onDuty = GetPlayerOnDuty()
 
         if (onDuty) then
-            local endDuty = lib.callback.await("yecoyz_duty:endDuty")
+            local endDuty = lib.callback.await("yecoyz_duty:stopDuty")
             SetDuty(false)
         end
     end)

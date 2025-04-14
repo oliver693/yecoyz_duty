@@ -9,15 +9,13 @@ import TabSelector from './components/TabSelector';
 import { TabProvider } from './contexts/TabContext';
 import { VisibilityProvider, useVisibility } from './contexts/VisibilityContext';
 import { callback } from './utilites/callback';
+import { TranslationProvider, useTranslation } from './contexts/TranslationProvider';
 
 const AppContent = () => {
   const { isVisible, setIsVisible, characterData } = useVisibility();
+  const { t } = useTranslation();
   const [canManage, setCanManage] = useState(false);
-  
-  // Uppdatera canManage när isBoss-värdet ändras
   useEffect(() => {
-    // Här antar vi att isBoss-värdet är tillgängligt via characterData
-    // Om det finns i ett annat context eller state, justera detta
     if (characterData && characterData.isBoss !== undefined) {
       setCanManage(characterData.isBoss);
     }
@@ -53,7 +51,7 @@ const AppContent = () => {
             }}
           >
             <Base width='500px' height='800px'>
-              <Header title="Duty Manager" icon={<FileIcon size={20} color="#4dabf7" />} onClose={handleClose} />
+              <Header title={t("ui_DutyTitle")} icon={<FileIcon size={20} color="#4dabf7" />} onClose={handleClose} />
               <Profile />
               <TabProvider canManage={canManage}>
                 <TabSelector />
@@ -70,7 +68,9 @@ function App() {
   return (
     <MantineProvider>
       <VisibilityProvider>
+        <TranslationProvider>
         <AppContent />
+        </TranslationProvider>
       </VisibilityProvider>
     </MantineProvider>
   );

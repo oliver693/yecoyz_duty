@@ -1,0 +1,34 @@
+{
+    "ui_DutyTitle": "Duty Manager",
+    "ui_workersList": "Workers List",
+    "ui_online": "Online",
+    "ui_offline": "Offline",
+    "ui_onlineWorkers": "Online Workers",
+    "ui_offlineWorkers": "Offline Workers",
+    "ui_noWorkersFound": "No workers found",
+    "ui_backToWorkers": "Back to Workers",
+
+    "ui_NoWorkersAvalibale": "No workers available",
+    "ui_WorkersWillAppearWhenAdded": "Workers will appear here when added",
+
+    "ui_history": "History",
+    "ui_statistics": "Statistics",
+    "ui_totalShifts": "Total Shifts",
+    "ui_workingTime": "Working Time",
+    "ui_averageShift": "Average Shift",
+
+    "ui_profileGrade": "Grade: ",
+    "ui_proflieOnDuty": "On Duty",
+    "ui_proflieOffDuty": "Off Duty",
+    "ui_proflieGoOnDuty": "Go On Duty",
+    "ui_proflieGoOffDuty": "Go Off Duty",
+
+    "ui_tabWorkers": "Workers",
+    "ui_tabHistory": "History",
+    "ui_tabManageWorkers": "Manage Workers",
+    "ui_shiftsHistory": "Shifts History",
+    "ui_shiftsNoRecord": "No shifts recorded yet",
+
+    "ui_manageWorkers": "Manage Workers",
+    "ui_searchWorkers": "Search workers..."
+}

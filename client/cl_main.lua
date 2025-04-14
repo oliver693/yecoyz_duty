@@ -1,3 +1,5 @@
+lib.locale()
+
 RegisterCommand("duty", function()
     SetNuiFocus(true, true)
     local playerName = GetPlayerFullName()
@@ -9,7 +11,7 @@ RegisterCommand("duty", function()
     if (GetPlayerOnDuty()) then
         dutyStarted = lib.callback.await("yecoyz_duty:getActiveDutyTime", false)
     end
-    print(dutyStarted)
+    print(GetPlayerOnDuty(), dutyStarted)
     local activeWorkers = lib.callback.await("yecoyz_duty:getActiveWorkers", false, GetPlayerJobName())
     if (not activeWorkers) then return false end
     
@@ -33,7 +35,6 @@ RegisterCommand("duty", function()
         end
     end
 
-
     SendNUIMessage({
         action = "showUI",
         character = { name = playerName, job = playerJob, grade = playerRank, isOnDuty = GetPlayerOnDuty(), dutyStarted = dutyStarted, isBoss = isBoss},
@@ -56,6 +57,10 @@ RegisterCommand("duty", function()
     -- })
 end, false)
 
+
+RegisterCommand("dutyState", function()
+    print(GetPlayerOnDuty())
+end, false)
 
 AddEventHandler("onResourceStart", function(resourceName)
     if (GetCurrentResourceName() ~= resourceName) then

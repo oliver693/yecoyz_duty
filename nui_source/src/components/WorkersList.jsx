@@ -1,7 +1,9 @@
 import React from 'react';
 import WorkerCard from './WorkerCard';
+import { useTranslation } from "../contexts/TranslationProvider";
 
 function WorkersList({ currentWorkers, showScrollbar, setShowScrollbar, needsScrollbar }) {
+  const { t } = useTranslation();
   const styles = {
     workersListContainer: {
       flex: 1,
@@ -63,7 +65,7 @@ function WorkersList({ currentWorkers, showScrollbar, setShowScrollbar, needsScr
         {/* Online workers section */}
         {onlineWorkers.length > 0 && (
           <div>
-            <div style={styles.sectionDivider}>Online Workers</div>
+            <div style={styles.sectionDivider}>{t("ui_onlineWorkers")}</div>
             <div style={styles.workersGroup}>
               {onlineWorkers.map(worker => (
                 <WorkerCard key={worker.identifier} worker={worker} />
@@ -75,7 +77,7 @@ function WorkersList({ currentWorkers, showScrollbar, setShowScrollbar, needsScr
         {/* Offline workers section */}
         {offlineWorkers.length > 0 && (
           <div>
-            <div style={styles.sectionDivider}>Offline Workers</div>
+            <div style={styles.sectionDivider}>{t("ui_offlineWorkers")}</div>
             <div style={styles.workersGroup}>
               {offlineWorkers.map(worker => (
                 <WorkerCard key={worker.identifier} worker={worker} isOffline={true} />
