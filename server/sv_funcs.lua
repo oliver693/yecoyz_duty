@@ -10,15 +10,6 @@ lib.callback.register("yecoyz_duty:getActiveDutyTime", function(source)
     return Cache.DutyData[source].startTime
 end)
 
-
-lib.callback.register("yecoyz_duty:getActiveEndDutyTime", function(source)
-    return os.time()
-end)
-
-lib.callback.register("yecoyz_duty:formatTime", function (source, time)
-    return os.date("%Y-%m-%d %H:%M:%S", time)
-end)
-
 lib.callback.register("yecoyz_duty:startDuty", function(source)
     local getMultiplier = GetMultiplier(source)
     local timeNow = os.time()
@@ -31,12 +22,26 @@ lib.callback.register("yecoyz_duty:startDuty", function(source)
 end)
 
 lib.callback.register("yecoyz_duty:stopDuty", function(source)
+    return StopDuty(source)
+end)
+
+function StopDuty(source)
+    print("Stop Duty, Source:", source)
     local saveData = SaveMultiplierAndEndTime(source)
     if (not saveData) then return false end
     
     Cache.DutyData[source] = {}
     return true
-end)
+end
+
+function HasAllowedJob(jobName)
+    for i = 1, #Config.Jobs do
+        if (jobName == Config.Jobs[i]) then
+            return true
+        end
+    end
+    return false
+end
 
 lib.callback.register("yecoyz_duty:isBoss", function(source)
     return GetBossPermission(source)
@@ -180,7 +185,7 @@ exports("GetOffDutyPayInfo", function()
 end)
 
 RegisterCommand("givemu", function (source)
-    Cache.DutyData[source].multiplier = 10
+    Cache.DutyData[source].multiplier = 2
 end, false)
 
 RegisterCommand("mu", function (source)

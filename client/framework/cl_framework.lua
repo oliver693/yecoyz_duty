@@ -8,6 +8,18 @@ elseif (GetResourceState("qb-core") == "started") then
     print("[INFO] - QBCore Framework")
 end
 
+function ShowNotification(text, notifyType)
+    if (Framework == "ESX") then
+        notifyType = notifyType or "inform"
+        local notify = ESX.ShowNotification(text, notifyType)
+        return notify
+    elseif (Framework == "QBCore") then
+        notifyType = notifyType or "primary"
+        local notify = TriggerEvent("QBCore:Notify", text, notifyType)
+        return notify
+    end
+end
+
 function GetPlayerJobGradeName()
     if (Framework == "ESX") then
         return ESX.GetPlayerData().job.grade_label
@@ -69,29 +81,11 @@ if (Framework == "ESX") then
             local startDutyTime = lib.callback.await("yecoyz_duty:startDuty", false)
         end
     end)
-
-    AddEventHandler("playerDropped", function()
-        local onDuty = GetPlayerOnDuty()
-
-        if (onDuty) then
-            local endDuty = lib.callback.await("yecoyz_duty:stopDuty")
-            SetDuty(false)
-        end
-    end)
 elseif (Framework == "QBCore") then
     RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
         Duty = GetPlayerOnDuty()
         if (Duty) then
             local startDutyTime = lib.callback.await("yecoyz_duty:startDuty", false)
-        end
-    end)
-
-    AddEventHandler("playerDropped", function()
-        local onDuty = GetPlayerOnDuty()
-
-        if (onDuty) then
-            local endDuty = lib.callback.await("yecoyz_duty:stopDuty")
-            SetDuty(false)
         end
     end)
 end

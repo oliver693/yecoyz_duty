@@ -1,4 +1,7 @@
 {
+
+    "noAccess": "You do not have permission to use the duty menu",
+
     "ui_DutyTitle": "Duty Manager",
     "ui_workersList": "Workers List",
     "ui_online": "Online",

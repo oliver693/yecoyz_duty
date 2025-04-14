@@ -35,6 +35,15 @@ function GetIfBoss()
     return isBoss
 end
 
+function HasAllowedJob(jobName)
+    for i = 1, #Config.Jobs do
+        if (jobName == Config.Jobs[i]) then
+            return true
+        end
+    end
+    return false
+end
+
 RegisterNUICallback("Eventhandler", function(data, cb)
     if (data.event == "toggleDuty") then
         Duty = GetPlayerOnDuty()

@@ -1,5 +1,10 @@
 Config = {}
 
+Config.Jobs = {
+    "police",
+    "mechanic",    
+}
+
 Config.OffDutySettings = {
     PayOffDuty = false, -- Should you be paid if your not in duty.
     OffDutyMultiplier = 1 -- How much of your salary should you be paid if your off duty.

@@ -23,15 +23,15 @@ shared_scripts {
     '@ox_lib/init.lua',
 }
 
-ui_page "nui_source/reload.html" -- Dev only
+-- ui_page "nui_source/reload.html" -- Dev only
 
--- ui_page "dist/index.html"
+ui_page "dist/index.html"
 
 files {
-    "nui_source/reload.html",
-    -- "dist/*.html",
-    -- "dist/assets/*.js",
-    -- "dist/assets/*.css",
+    -- "nui_source/reload.html",
+    "dist/*.html",
+    "dist/assets/*.js",
+    "dist/assets/*.css",
 
     "locales/*.json"
 }

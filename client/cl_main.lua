@@ -1,9 +1,13 @@
 lib.locale()
 
 RegisterCommand("duty", function()
+    local playerJob = GetPlayerJobName()
+    local allowedJob = HasAllowedJob(playerJob)
+    if (not allowedJob) then ShowNotification(locale("noAccess"), "error") return end
+
     SetNuiFocus(true, true)
     local playerName = GetPlayerFullName()
-    local playerJob = GetPlayerJobLabel()
+    local playerJobLabel = GetPlayerJobLabel()
     local playerRank = GetPlayerJobGradeName()
     local dutyStarted = nil
 
@@ -11,14 +15,14 @@ RegisterCommand("duty", function()
     if (GetPlayerOnDuty()) then
         dutyStarted = lib.callback.await("yecoyz_duty:getActiveDutyTime", false)
     end
-    print(GetPlayerOnDuty(), dutyStarted)
-    local activeWorkers = lib.callback.await("yecoyz_duty:getActiveWorkers", false, GetPlayerJobName())
+
+    local activeWorkers = lib.callback.await("yecoyz_duty:getActiveWorkers", false, playerJob)
     if (not activeWorkers) then return false end
     
     local dutyHistory = GetDutyHistory()
     
     local isBoss = GetIfBoss()
-    local employees =  lib.callback.await("yecoyz_duty:getAllEmployees", false, GetPlayerJobName())  
+    local employees =  lib.callback.await("yecoyz_duty:getAllEmployees", false, playerJob)  
     
     if (activeWorkers) then
         for i = 1, #employees do
@@ -37,35 +41,19 @@ RegisterCommand("duty", function()
 
     SendNUIMessage({
         action = "showUI",
-        character = { name = playerName, job = playerJob, grade = playerRank, isOnDuty = GetPlayerOnDuty(), dutyStarted = dutyStarted, isBoss = isBoss},
+        character = { name = playerName, job = playerJobLabel, grade = playerRank, isOnDuty = GetPlayerOnDuty(), dutyStarted = dutyStarted, isBoss = isBoss},
         workers = activeWorkers,
         shifts = dutyHistory
     })
-
-    -- SendNUIMessage({
-    --     action = "showUI",
-    --     type = "dutyData",
-    --     name = playerName,
-    --     job = playerJob,
-    --     rank = playerRank,
-    --     isOnDuty = Duty,
-    --     dutyStarted = lib.callback.await("yecoyz_duty:formatTime", false, dutyStarted), --os.date("%Y-%m-%d %H:%M:%S", dutyStarted),
-    --     activeWorkers = activeWorkers,
-    --     dutyHistory = dutyHistory,
-    --     isBoss = isBoss,
-    --     employees = employees,
-    -- })
 end, false)
 
-
-RegisterCommand("dutyState", function()
-    print(GetPlayerOnDuty())
-end, false)
 
 AddEventHandler("onResourceStart", function(resourceName)
     if (GetCurrentResourceName() ~= resourceName) then
         return
     end
+    local allowedJob = HasAllowedJob(GetPlayerJobName())
+    if (not allowedJob) then return end
     local duty = GetPlayerOnDuty()
 
     if (duty) then

@@ -8,15 +8,16 @@ elseif (GetResourceState("qb-core") == "started") then
     print("[INFO] - QBCore Framework")
 end
 
-if (GetResourceState("npwd") == "started") then
-    Phone = "npwd"
-elseif (GetResourceState("qb-phone") == "started") then
-    Phone = "qb-phone"
-elseif (GetResourceState("lb-phone") == "started") then
-    Phone = "lb-phone"
-else
-    Phone = nil
-end
+AddEventHandler("playerDropped", function(reason)
+    local allowedJob = HasAllowedJob(GetPlayerJob(source))
+    if (not allowedJob) then return end
+    local duty = GetPlayerOnDuty(source)
+    if (duty) then
+        local stopDuty = StopDuty(source)
+        if (not stopDuty) then print("stopDuty är false") end
+    end
+end)
+
 
 function GetPlayerFromId(source)
     if (Framework == "ESX") then
@@ -50,6 +51,18 @@ function GetPlayerJob(source)
         return player.PlayerData.job.name
     end
 
+    return nil
+end
+
+function GetPlayerOnDuty(source)
+    local player = GetPlayerFromId(source)
+    if (not player) then return nil end
+
+    if (Framework == "ESX") then
+        return player.getJob().onDuty
+    elseif (Framework == "QBCore") then
+        return player.playerData.job.onduty
+    end
     return nil
 end
 
@@ -163,18 +176,22 @@ end
 
 
 function GetPhoneNumber(identifier)
-    if (Phone == "npwd") then
-        local playerData = exports.npwd:getPlayerData({ identifier = identifier })
-        if (not playerData) then return false end
-
-        return playerData.phoneNumber
-    elseif (Phone == "lb-phone") then
-        local phoneNumber = exports["lb-phone"]:GetEquippedPhoneNumber(identifier)
-        if (not phoneNumber) then return false end
+    if (Framework == "ESX") then
+        local phoneNumber = MySQL.single.await("SELECT `phone_number` FROM `users`, WHERE `identifier` = ? LIMIT 1", {
+            identifier
+        })
+        if (not phoneNumber) then return "0" end
 
         return phoneNumber
+    elseif (Framework == "QBCore") then
+        local charinfo = MySQL.single.await("SELECT `charinfo` FROM `players`, WHERE `citizenid` = ? LIMIT 1", {
+            identifier
+        })
+
+        if (not charinfo) then return "0" end
+        return json.decode(charinfo).phone
     end
-    return false
+    return nil
 end
 
 lib.callback.register("yecoyz_duty:setDuty", function(source, status)
