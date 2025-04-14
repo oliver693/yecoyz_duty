@@ -177,19 +177,19 @@ end
 
 function GetPhoneNumber(identifier)
     if (Framework == "ESX") then
-        local phoneNumber = MySQL.single.await("SELECT `phone_number` FROM `users`, WHERE `identifier` = ? LIMIT 1", {
+        local result = MySQL.single.await("SELECT `phone_number` FROM `users` WHERE `identifier` = ? LIMIT 1", {
             identifier
         })
-        if (not phoneNumber) then return "0" end
+        if (not result) then return "0" end
 
-        return phoneNumber
+        return result.phone_number
     elseif (Framework == "QBCore") then
-        local charinfo = MySQL.single.await("SELECT `charinfo` FROM `players`, WHERE `citizenid` = ? LIMIT 1", {
+        local result = MySQL.single.await("SELECT `charinfo` FROM `players` WHERE `citizenid` = ? LIMIT 1", {
             identifier
         })
 
-        if (not charinfo) then return "0" end
-        return json.decode(charinfo).phone
+        if (not result) then return "0" end
+        return json.decode(result.charinfo).phone
     end
     return nil
 end
