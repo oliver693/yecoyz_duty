@@ -14,6 +14,12 @@ const Profile = () => {
     let timer;
     if (isOnDuty) {
       const startTime = dutyStarted ? new Date(dutyStarted * 1000) : new Date();
+      
+      // Beräkna och sätt det initiala värdet direkt
+      const currentTime = new Date();
+      const elapsedSeconds = Math.floor((currentTime - startTime) / 1000);
+      setDutyTime(elapsedSeconds);
+      
       timer = setInterval(() => {
         const currentTime = new Date();
         const elapsedSeconds = Math.floor((currentTime - startTime) / 1000);

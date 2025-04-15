@@ -1,6 +1,6 @@
 Config = {}
 
-Config.FrameworkBased = "ESX" -- ESX, QBCore, Standalone.
+Config.FrameworkBased = false -- If true then get duty value from ESX or QBCore else built in.
 
 Config.Jobs = {
     "police",
@@ -14,7 +14,7 @@ Config.OffDutySettings = {
 
 Config.MultiplierSettings = {
     SalaryMultiplier = true,
-    hourlyloss = 0.1,
+    Hourlyloss = 0.1,
     Multiplier = {
         ["police"] = {
             increasePerHour = 0.2, -- How much it will add per hour.

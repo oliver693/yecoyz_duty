@@ -58,10 +58,15 @@ function GetPlayerOnDuty(source)
     local player = GetPlayerFromId(source)
     if (not player) then return nil end
 
-    if (Framework == "ESX") then
+    if (Framework == "ESX") and (Config.FrameworkBased) then
         return player.getJob().onDuty
-    elseif (Framework == "QBCore") then
+    elseif (Framework == "QBCore") and (Config.FrameworkBased) then
         return player.playerData.job.onduty
+    elseif (not Config.FrameworkBased) then
+        if (not Cache.DutyData[source]) then
+            Cache.DutyData[source] = { onDuty = false}
+        end
+        return Cache.DutyData[source].onDuty
     end
     return nil
 end
@@ -194,18 +199,29 @@ function GetPhoneNumber(identifier)
     return nil
 end
 
-lib.callback.register("yecoyz_duty:setDuty", function(source, status)
-    if (Framework == "ESX") then
+function SetDuty(source, status)
+    if (Framework == "ESX") and (Config.FrameworkBased) then
         local Player = GetPlayerFromId(source)
         if (not Player) then return false end
         Player.setJob(Player.job.name, Player.job.grade, status)
         return Player.job.onDuty
-    elseif (Framework == "QBCore") then
+    elseif (Framework == "QBCore" and (Config.FrameworkBased)) then
         local Player = QBCore.Functions.GetPlayer(source)
         if (not Player) then return false end
 
         return Player.Functions.SetJobDuty(status)
+    else
+        Cache.DutyData[source].onDuty = status
+        return Cache.DutyData[source].onDuty
     end
 
     return nil
+end
+
+lib.callback.register("yecoyz_duty:setDuty", function(source, status)
+    return SetDuty(source, status)
+end)
+
+exports("SetDuty", function(source, status)
+    return SetDuty(source, status)
 end)

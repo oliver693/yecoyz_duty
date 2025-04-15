@@ -138,7 +138,7 @@ function GetMultiplier(source)
     
     local multiplier = multiplierData.multiplier
     if (hoursPassed >= 1) then
-        multiplier = multiplierData.multiplier - (Config.MultiplierSettings.hourlyloss * hoursPassed)
+        multiplier = multiplierData.multiplier - (Config.MultiplierSettings.Hourlyloss * hoursPassed)
         if multiplier < 1.0 then
             multiplier = 1.0
         end
@@ -170,6 +170,14 @@ function CalculateSalaryMultiplier(source)
 
     return multiplier
 end
+
+lib.callback.register("yecoyz_duty:getStandaloneDuty", function(source)
+    return GetPlayerOnDuty(source)
+end)
+
+exports("GetDutyState", function(source)
+    return GetPlayerOnDuty(source)
+end)
 
 exports("GetSalaryMultiplier", function(source)
     return CalculateSalaryMultiplier(source)
