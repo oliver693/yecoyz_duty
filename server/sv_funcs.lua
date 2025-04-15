@@ -26,7 +26,6 @@ lib.callback.register("yecoyz_duty:stopDuty", function(source)
 end)
 
 function StopDuty(source)
-    print("Stop Duty, Source:", source)
     local saveData = SaveMultiplierAndEndTime(source)
     if (not saveData) then return false end
     

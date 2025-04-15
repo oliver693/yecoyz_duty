@@ -16,6 +16,7 @@ server_scripts {
     "server/framework/sv_framwork.lua",
     "server/sv_funcs.lua",
     "server/sv_main.lua",
+    "server/database.lua"
 }
 
 shared_scripts {

@@ -10,9 +10,9 @@ export const VisibilityProvider = ({ children }) => {
   const [shiftsData, setShiftsData] = useState(null);
   const [translations, setTranslations] = useState({});
   const [characterData, setCharacterData] = useState({
-    name: "",
-    job: "",
-    grade: "",
+    name: "Robert Taylor",
+    job: "LSPD",
+    grade: "Officer",
     isOnDuty: false,
     dutyStarted: null
   });

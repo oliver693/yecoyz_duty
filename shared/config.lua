@@ -1,5 +1,7 @@
 Config = {}
 
+Config.FrameworkBased = "ESX" -- ESX, QBCore, Standalone.
+
 Config.Jobs = {
     "police",
     "mechanic",    
