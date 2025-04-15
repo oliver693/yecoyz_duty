@@ -45,15 +45,14 @@ function Statistics({ shifts, activeFilter, setActiveFilter, filters }) {
 
   const stats = calculateStats();
 
-  // Format duration in minutes to hours and minutes
-  const formatDuration = (minutes) => {
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
+  const formatDuration = (seconds) => {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
     
     if (hours > 0) {
-      return `${hours}h ${mins}m`;
+      return `${hours}h ${minutes}m`;
     }
-    return `${mins}m`;
+    return `${minutes}m`;
   };
 
   const styles = {

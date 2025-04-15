@@ -53,15 +53,17 @@ RegisterNUICallback("Eventhandler", function(data, cb)
             local saveHistory = SaveDutyHistory()
             if (not saveHistory) then return cb({success = false}) end
         end
-        
+
         local toggleDuty = ToggleDuty()
         if (not toggleDuty) then return cb({success = false}) end
 
         local getActiveDutyTime = lib.callback.await("yecoyz_duty:getActiveDutyTime", false)
+        local dutyHistory = GetDutyHistory()
 
         SendNUIMessage({
-            action = "updateCharacter",
-            character = {isOnDuty = newDutyState, dutyStarted = getActiveDutyTime}
+            action = "updateCharacter" and "updateShifts",
+            character = {isOnDuty = newDutyState, dutyStarted = getActiveDutyTime},
+            shifts = dutyHistory
         })
         print("Togglar och nya duty är: ", newDutyState)
         return cb({ success = true, isOnDuty = Duty ,dutyStarted = getActiveDutyTime})
@@ -71,7 +73,7 @@ RegisterNUICallback("Eventhandler", function(data, cb)
     elseif (data.event == ("getLocale")) then
         local uiLocales = {}
         local locales = lib.getLocales()
-        
+
         for k, v in pairs(locales) do
             if (k:find("^ui_")) then
                 uiLocales[k] = v
@@ -82,7 +84,7 @@ RegisterNUICallback("Eventhandler", function(data, cb)
         SetNuiFocus(false, false)
         return cb({ success = true })
     end
-    
+
     return cb({ success = false })
 end)
 

@@ -20,22 +20,34 @@ RegisterCommand("duty", function()
     if (not activeWorkers) then return false end
     
     local dutyHistory = GetDutyHistory()
-    
+
     local isBoss = GetIfBoss()
-    local employees =  lib.callback.await("yecoyz_duty:getAllEmployees", false, playerJob)  
+    local employees =  lib.callback.await("yecoyz_duty:getAllEmployees", false, playerJob)
     
     if (activeWorkers) then
+        local existingEmployees = {}
+        
+        for i = 1, #activeWorkers do
+            existingEmployees[activeWorkers[i].identifier] = true
+        end
+        
         for i = 1, #employees do
-            table.insert(activeWorkers, {
-                source = nil,
-                identifier = employees[i].identifier,
-                name = employees[i].firstname .. " " .. employees[i].lastname,
-                job = employees[i].job.label,
-                grade = employees[i].job_grade,
-                phone = employees[i].phone_number or "0",
-                dutyTime = nil,
-                online = false
-            })
+            local employeeIdentifier = employees[i].identifier
+            
+            if (not existingEmployees[employeeIdentifier]) then
+                table.insert(activeWorkers, {
+                    source = nil,
+                    identifier = employeeIdentifier,
+                    name = employees[i].firstname .. " " .. employees[i].lastname,
+                    job = employees[i].job.label,
+                    grade = employees[i].job_grade,
+                    phone = employees[i].phone_number or "0",
+                    dutyTime = nil,
+                    online = false
+                })
+
+                existingEmployees[employeeIdentifier] = true
+            end
         end
     end
 

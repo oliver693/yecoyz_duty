@@ -6,7 +6,15 @@ function HistoryList({ shifts }) {
   const { t } = useTranslation();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 3;
-  const totalPages = Math.ceil(shifts.length / itemsPerPage);
+  
+  // Sort shifts array by date (newest first)
+  const sortedShifts = [...shifts].sort((a, b) => {
+    const dateA = new Date(a.startTimeFormatted);
+    const dateB = new Date(b.startTimeFormatted);
+    return dateB - dateA; // Newest first
+  });
+  
+  const totalPages = Math.ceil(sortedShifts.length / itemsPerPage);
   
   const formatDateTime = (dateTimeStr) => {
     const date = new Date(dateTimeStr);
@@ -19,14 +27,16 @@ function HistoryList({ shifts }) {
     });
   };
   
-  const formatDuration = (minutes) => {
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
+  // Updated to handle seconds instead of minutes
+  const formatDuration = (seconds) => {
+    // Convert seconds to minutes and hours
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
     
     if (hours > 0) {
-      return `${hours}h ${mins}m`;
+      return `${hours}h ${minutes}m`;
     }
-    return `${mins}m`;
+    return `${minutes}m`;
   };
   
   // State to track if scrollbar should be visible
@@ -35,7 +45,7 @@ function HistoryList({ shifts }) {
   // Get current page items
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = shifts.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = sortedShifts.slice(indexOfFirstItem, indexOfLastItem);
   
   // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
@@ -179,7 +189,6 @@ function HistoryList({ shifts }) {
       fontSize: '15px',
       fontFamily: "var(--font)",
     },
-    // Pagination styles from Mantine
     paginationContainer: {
       marginTop: '16px',
       display: 'flex',
