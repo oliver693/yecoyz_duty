@@ -16,7 +16,7 @@ function ActiveWorkers() {
       "source": 1,
       "identifier": "char1:b52fe4b354f8b99ac96ab6469ad8f1c7bf77ef2a",
       "grade": "Captain",
-      "name": "dawadawdaw laldwald",
+      "name": "Stefan Andersson",
       "phone": "393-459-9251",
       "online": false
     },
