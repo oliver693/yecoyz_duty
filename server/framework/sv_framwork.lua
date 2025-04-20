@@ -166,7 +166,7 @@ function GetActiveWorkers(jobName)
                     identifier = player.PlayerData.citizenid,
                     name = player.PlayerData.charinfo.firstname .. " " .. player.PlayerData.charinfo.lastname,
                     job = player.PlayerData.job.label,
-                    grade = player.PlayerData.job.grade.label,
+                    grade = player.PlayerData.job.grade.name,
                     phone = GetPhoneNumber(player.PlayerData.citizenid) or "0",
                     dutyTime = Cache.DutyData[player.PlayerData.source] and os.date("%H:%M:%S", Cache.DutyData[player.PlayerData.source].startTime) or "N/A",
                     online = true

@@ -4,7 +4,7 @@ Config.FrameworkBased = false -- If true then get duty value from ESX or QBCore 
 
 Config.Jobs = {
     "police",
-    "mechanic",    
+    "mechanic",
 }
 
 Config.OffDutySettings = {

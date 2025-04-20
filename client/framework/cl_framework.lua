@@ -24,7 +24,7 @@ function GetPlayerJobGradeName()
     if (Framework == "ESX") then
         return ESX.GetPlayerData().job.grade_label
     elseif (Framework == "QBCore") then
-        return QBCore.Functions.GetPlayerData().job.grade.label
+        return QBCore.Functions.GetPlayerData().job.grade.name
     end
     return nil
 end
