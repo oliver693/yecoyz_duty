@@ -190,11 +190,3 @@ exports("GetOffDutyPayInfo", function()
     }
     return offDutyInfo
 end)
-
-RegisterCommand("givemu", function (source)
-    Cache.DutyData[source].multiplier = 2
-end, false)
-
-RegisterCommand("mu", function (source)
-    print(CalculateSalaryMultiplier(source))
-end, false)
