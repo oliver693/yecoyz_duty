@@ -89,3 +89,4 @@ RegisterNUICallback("Eventhandler", function(data, cb)
 end)
 
 exports("GetOwnHistory", GetDutyHistory)
+exports("SaveOwnDutyHistory", SaveDutyHistory)

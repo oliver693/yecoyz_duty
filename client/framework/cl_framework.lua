@@ -60,7 +60,6 @@ function GetPlayerOnDuty()
     if (Framework == "ESX") and (Config.FrameworkBased) then
         return ESX.GetPlayerData().job.onDuty
     elseif (Framework == "QBCore") and (Config.FrameworkBased) then
-        print("onDuty QBCORE?", QBCore.Functions.GetPlayerData().job.onduty)
         return QBCore.Functions.GetPlayerData().job.onduty
     elseif (not Config.FrameworkBased) then
         return lib.callback.await("yecoyz_duty:getStandaloneDuty")
@@ -69,7 +68,6 @@ function GetPlayerOnDuty()
 end
 
 function SetDuty(status)
-    print("Settings duty:", status)
     return lib.callback.await("yecoyz_duty:setDuty", false, status)
 end
 
