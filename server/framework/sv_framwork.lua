@@ -1,12 +1,14 @@
-if (GetResourceState("es_extended") == "started") then
-    Framework = "ESX"
-    ESX = exports["es_extended"]:getSharedObject()
-    print("[INFO] - ESX Framework")
-elseif (GetResourceState("qb-core") == "started") then
-    Framework = "QBCore"
-    QBCore = exports['qb-core']:GetCoreObject()
-    print("[INFO] - QBCore Framework")
-end
+CreateThread(function ()
+    if (GetResourceState("es_extended") == "started") then
+        Framework = "ESX"
+        ESX = exports["es_extended"]:getSharedObject()
+        print("[INFO] - ESX Framework")
+    elseif (GetResourceState("qb-core") == "started") or (GetResourceState("qbx_core") == "started") then
+        Framework = "QBCore"
+        QBCore = exports['qb-core']:GetCoreObject()
+        print("[INFO] - QBCore Framework")
+    end
+end)
 
 AddEventHandler("playerDropped", function(reason)
     local allowedJob = HasAllowedJob(GetPlayerJob(source))
@@ -22,6 +24,8 @@ end)
 function GetPlayerFromId(source)
     if (Framework == "ESX") then
         return ESX.GetPlayerFromId(source)
+    elseif (Framework == "QBCore") and (GetResourceState("qbx_core") == "started") then
+        return exports.qbx_core:GetPlayer(source)
     elseif (Framework == "QBCore") then
         return QBCore.Functions.GetPlayer(source)
     end
@@ -60,6 +64,8 @@ function GetPlayerOnDuty(source)
 
     if (Framework == "ESX") and (Config.FrameworkBased) then
         return player.getJob().onDuty
+    elseif (Framework == "QBCore") and (GetResourceState("qbx_core") == "started") then
+        return player.PlayerData.job.onduty
     elseif (Framework == "QBCore") and (Config.FrameworkBased) then
         return player.playerData.job.onduty
     elseif (not Config.FrameworkBased) then
@@ -203,8 +209,14 @@ function SetDuty(source, status)
     if (Framework == "ESX") and (Config.FrameworkBased) then
         local Player = GetPlayerFromId(source)
         if (not Player) then return false end
+
         Player.setJob(Player.job.name, Player.job.grade, status)
         return Player.job.onDuty
+    elseif (Framework == "QBCore") and (GetResourceState("qbx_core") == "started") then
+        local identifier = GetIdentifier(source)
+        if (not identifier) then return nil end
+
+        return exports.qbx_core:SetJobDuty(identifier, status)
     elseif (Framework == "QBCore" and (Config.FrameworkBased)) then
         local Player = QBCore.Functions.GetPlayer(source)
         if (not Player) then return false end
