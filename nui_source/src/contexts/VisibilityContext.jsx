@@ -73,8 +73,6 @@ export const VisibilityProvider = ({ children }) => {
             isOnDuty: data.character.isOnDuty !== undefined ? data.character.isOnDuty : characterData.isOnDuty,
             dutyStarted: data.character.dutyStarted ? new Date(data.character.dutyStarted) : characterData.dutyStarted
           });
-
-          console.log(data.character.isOnDuty)
         }
       }
     };

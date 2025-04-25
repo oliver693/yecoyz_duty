@@ -65,7 +65,6 @@ RegisterNUICallback("Eventhandler", function(data, cb)
             character = {isOnDuty = newDutyState, dutyStarted = getActiveDutyTime},
             shifts = dutyHistory
         })
-        print("Togglar och nya duty är: ", newDutyState)
         return cb({ success = true, isOnDuty = Duty ,dutyStarted = getActiveDutyTime})
     elseif (data.event == "getEmployeeHistory") then
     local employeHistory = lib.callback.await("yecoyz_duty:getEmployeHistory", false, data.data)

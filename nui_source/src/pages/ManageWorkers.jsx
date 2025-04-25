@@ -68,7 +68,6 @@ function ManageWorkers() {
   const [activeFilter, setActiveFilter] = useState('all');
   
   const handleSelectWorker = (worker) => {
-    console.log(JSON.stringify(worker))
     callback("getEmployeeHistory", worker.identifier).then((res) => {
       setSelectedWorker(worker);
       setSampleShifts(res);

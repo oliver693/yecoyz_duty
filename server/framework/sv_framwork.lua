@@ -16,7 +16,7 @@ AddEventHandler("playerDropped", function(reason)
     local duty = GetPlayerOnDuty(source)
     if (duty) then
         local stopDuty = StopDuty(source)
-        if (not stopDuty) then print("stopDuty är false") end
+        if (not stopDuty) then end
     end
 end)
 
@@ -85,7 +85,6 @@ function GetAllEmployees(jobName)
             local gradeResult = MySQL.query.await("SELECT label FROM job_grades WHERE job_name = ? AND grade = ?", {jobName, employees[i].job_grade})
             local jobResult = MySQL.query.await("SELECT label FROM jobs WHERE name = ?", {jobName})
 
-            print(employees[i].phone_number)
             employees[i] = {
                 identifier = employees[i].identifier,
                 firstname = employees[i].firstname,
