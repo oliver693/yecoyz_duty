@@ -19,6 +19,8 @@ RegisterCommand("duty", function()
     local activeWorkers = lib.callback.await("yecoyz_duty:getActiveWorkers", false, playerJob)
     if (not activeWorkers) then return false end
     
+    end    
+
     local dutyHistory = GetDutyHistory()
 
     local isBoss = GetIfBoss()
@@ -50,7 +52,7 @@ RegisterCommand("duty", function()
             end
         end
     end
-
+    
     SendNUIMessage({
         action = "showUI",
         character = { name = playerName, job = playerJobLabel, grade = playerRank, isOnDuty = GetPlayerOnDuty(), dutyStarted = dutyStarted, isBoss = isBoss},

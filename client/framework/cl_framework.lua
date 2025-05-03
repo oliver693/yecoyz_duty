@@ -71,6 +71,10 @@ function SetDuty(status)
     return lib.callback.await("yecoyz_duty:setDuty", false, status)
 end
 
+exports("SetDuty", function(status)
+    SetDuty(status)
+end)
+
 if (Framework == "ESX") then
     RegisterNetEvent('esx:playerLoaded', function()
         while (not ESX.IsPlayerLoaded()) do

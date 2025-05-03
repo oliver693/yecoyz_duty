@@ -142,19 +142,18 @@ function GetActiveWorkers(jobName)
     local activeWorkers = {}
 
     if (Framework == "ESX") then
-        local playersWithSameJob = ESX.GetPlayers()
+        local playersWithSameJob =  ESX.GetExtendedPlayers("job", jobName)
+
         for i = 1, #playersWithSameJob do
-            local player = playersWithSameJob[i]
-            local playerData = ESX.GetPlayerFromId(player)
-            if playerData.job.name == jobName and playerData.job.onDuty then
+            if (playersWithSameJob[i].job.onDuty) then
                 activeWorkers[i] = {
-                    source = playerData.source,
-                    identifier = playerData.identifier,
-                    name = playerData.name,
-                    job = playerData.job.label,
-                    grade = playerData.job.grade_label,
-                    phone = GetPhoneNumber(playerData.identifier) or "0",
-                    dutyTime = FormatDutyTime(Cache.DutyData[playerData.source] and Cache.DutyData[playerData.source].startTime),
+                    source = playersWithSameJob[i].source,
+                    identifier = playersWithSameJob[i].identifier,
+                    name = playersWithSameJob[i].name,
+                    job = playersWithSameJob[i].job.label,
+                    grade = playersWithSameJob[i].job.grade_label,
+                    phone = GetPhoneNumber(playersWithSameJob[i].identifier) or "0",
+                    dutyTime = FormatDutyTime(Cache.DutyData[playersWithSameJob[i].source] and Cache.DutyData[playersWithSameJob[i].source].startTime),
                     online = true
                 }
             end
