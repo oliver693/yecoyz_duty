@@ -19,6 +19,8 @@ RegisterCommand("duty", function()
     local activeWorkers = lib.callback.await("yecoyz_duty:getActiveWorkers", false, playerJob)
     if (not activeWorkers) then return false end
     
+    for i = 1, #activeWorkers do
+        activeWorkers[i].online = true
     end    
 
     local dutyHistory = GetDutyHistory()
