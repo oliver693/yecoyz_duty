@@ -31,9 +31,9 @@ end
 
 function GetPlayerFullName()
     if (Framework == "ESX") then
-        return ESX.GetPlayerData().firstName .. " " .. ESX.GetPlayerData().lastName .. ""
+        return lib.callback.await("yecoyz_duty:getFullName", false)
     elseif (Framework == "QBCore") then
-        return QBCore.Functions.GetPlayerData().charinfo.firstname .. " " .. QBCore.Functions.GetPlayerData().charinfo.lastname .. ""
+        return lib.callback.await("yecoyz_duty:getFullName", false)
     end
     return nil
 end

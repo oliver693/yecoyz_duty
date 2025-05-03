@@ -142,7 +142,7 @@ function GetActiveWorkers(jobName)
     local activeWorkers = {}
 
     if (Framework == "ESX") then
-        local playersWithSameJob =  ESX.GetExtendedPlayers("job", jobName)
+        local playersWithSameJob = ESX.GetExtendedPlayers("job", jobName)
 
         for i = 1, #playersWithSameJob do
             if (playersWithSameJob[i].job.onDuty) then
@@ -227,6 +227,29 @@ function SetDuty(source, status)
 
     return nil
 end
+
+function GetFullName(source)
+    if (Framework == "ESX") then
+        local playerData = GetPlayerFromId(source)
+        local firstName = playerData?.firstName or playerData?.variables?.firstName or "Unknown"
+        local lastName = playerData?.lastName or playerData?.variables?.lastName or "Unknown"
+
+        return firstName .. " " .. lastName
+    elseif (Framework == "QBCore") then
+        local player = GetPlayerFromId(source)
+        if (not player) then return "Unknown Unknown" end
+        local firstName = player?.PlayerData?.firstname or "Unknown"
+        local lastName = player?.PlayerData?.lastname or "Unknown"
+
+        return firstName .. " " .. lastName
+    end
+
+    return "Unknown Unknown"
+end
+
+lib.callback.register("yecoyz_duty:getFullName", function(source)
+    return GetFullName(source)
+end)
 
 lib.callback.register("yecoyz_duty:setDuty", function(source, status)
     return SetDuty(source, status)
