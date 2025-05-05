@@ -238,8 +238,8 @@ function GetFullName(source)
     elseif (Framework == "QBCore") then
         local player = GetPlayerFromId(source)
         if (not player) then return "Unknown Unknown" end
-        local firstName = player?.PlayerData?.firstname or "Unknown"
-        local lastName = player?.PlayerData?.lastname or "Unknown"
+       local firstName = player?.PlayerData?.charinfo?.firstname or "Unknown"
+       local lastName = player?.PlayerData?.charinfo?.lastname or "Unknown"
 
         return firstName .. " " .. lastName
     end
