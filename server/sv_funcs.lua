@@ -18,6 +18,22 @@ lib.callback.register("yecoyz_duty:startDuty", function(source)
         startTime = timeNow,
         multiplier = getMultiplier,
     }
+
+    local xPlayer = ESX.GetPlayerFromId(source)
+    if xPlayer then
+        local currentJob = xPlayer.getJob().name
+        local currentGrade = xPlayer.getJob().grade
+
+        local onDutyJobs = {
+            offpolice = "police",
+            offambulance = "ambulance"
+        }
+
+        if onDutyJobs[currentJob] then
+            xPlayer.setJob(onDutyJobs[currentJob], currentGrade)
+        end
+    end
+
     return true
 end)
 
@@ -28,10 +44,27 @@ end)
 function StopDuty(source)
     local saveData = SaveMultiplierAndEndTime(source)
     if (not saveData) then return false end
-    
+
+    local xPlayer = ESX.GetPlayerFromId(source)
+    if xPlayer then
+        local currentJob = xPlayer.getJob().name
+        local currentGrade = xPlayer.getJob().grade
+
+        local offDutyJobs = {
+            police = "offpolice",
+            ambulance = "offambulance"
+        }
+
+        if offDutyJobs[currentJob] then
+            xPlayer.setJob(offDutyJobs[currentJob], currentGrade)
+        end
+    end
+
     Cache.DutyData[source] = {}
     return true
 end
+
+
 
 function HasAllowedJob(jobName)
     for i = 1, #Config.Jobs do
