@@ -3,8 +3,10 @@ Config = {}
 Config.FrameworkBased = false -- If true then get duty value from ESX or QBCore else built in.
 
 Config.Jobs = {
+    "ambulance",
     "police",
-    "mechanic",
+    "offambulance",
+    "offpolice",
 }
 
 Config.OffDutySettings = {
@@ -13,7 +15,7 @@ Config.OffDutySettings = {
 }
 
 Config.MultiplierSettings = {
-    SalaryMultiplier = true,
+    SalaryMultiplier = false,
     Hourlyloss = 0.1,
     Multiplier = {
         ["police"] = {
@@ -30,5 +32,5 @@ Config.MultiplierSettings = {
 -- Only if you use ESX.
 Config.BossGrades = {
     "boss",
-    "chef"
+    "cheif"
 }
