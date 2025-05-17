@@ -87,5 +87,7 @@ RegisterNUICallback("Eventhandler", function(data, cb)
     return cb({ success = false })
 end)
 
+RegisterKeyMapping("duty", "Open Duty Menu", "keyboard", "M")
+
 exports("GetOwnHistory", GetDutyHistory)
 exports("SaveOwnDutyHistory", SaveDutyHistory)
