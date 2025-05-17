@@ -1,9 +1,8 @@
-Preview: https://www.youtube.com/watch?v=ea963DAjAaY
 
-Tebex: https://store.yecoyzresources.com/
+![image](https://github.com/user-attachments/assets/49bc89a7-bb81-4d07-89cc-d911d11068bc)
 
-Discord: https://discord.yecoyzresources.com/
-
+Preview: https://www.youtube.com/watch?v=ea963DAjAaY [Preview from Yecoyz ]
+Discord: https://discord.yecoyzresources.com/ [Yecoyz Discord]
 # Features
 All of the features our script have and all the possibilities.
 
@@ -14,3 +13,8 @@ All of the features our script have and all the possibilities.
 - Managing Workers system: This allows the boss or chief of a company to view all employees and monitor their work performance, including shifts, total work time, and average shift duration.
 
 - Multiplier System: Rewards players for working longer shifts and staying active on duty. The more you work, the higher your multiplier grows. However, going off duty will gradually decrease the multiplier over time.
+
+- Auto Job Switch on Duty Toggle (Custom Feature): Automatically changes the player’s job role when toggling duty status—ensuring accurate role assignment without manual intervention.
+
+Note: This feature was not part of the original script by Yecoyz. It was added by Ollinox as a enhancement. All original resource credits go to Yecoyz.
+
