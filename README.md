@@ -1,6 +1,3 @@
-
-![image](https://github.com/user-attachments/assets/49bc89a7-bb81-4d07-89cc-d911d11068bc)
-
 Preview: https://www.youtube.com/watch?v=ea963DAjAaY [Preview from Yecoyz ]
 Discord: https://discord.yecoyzresources.com/ [Yecoyz Discord]
 # Features
@@ -18,3 +15,6 @@ All of the features our script have and all the possibilities.
 
 Note: This feature was not part of the original script by Yecoyz. It was added by Ollinox as a enhancement. All original resource credits go to Yecoyz.
 
+
+
+![image](https://github.com/user-attachments/assets/49bc89a7-bb81-4d07-89cc-d911d11068bc)
