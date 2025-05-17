@@ -17,6 +17,8 @@ All of the features our script have and all the possibilities.
 - Auto Job Switch on Duty Toggle (Custom Feature): Automatically changes the player’s job role when toggling duty status—ensuring accurate role assignment without manual intervention.
 
 - Added a keybind for quick access to the Duty menu.
+
+
 🛠️ How to Add More Jobs [yecoyz_duty/server/sv_funcs.lua]
                         * for on duty line 27 to 30 
                         * for off duty line 53 to 56
